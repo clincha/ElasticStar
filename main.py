@@ -16,10 +16,10 @@ def get_accounts(personal_access_token):
         - createdAt
         - name
     """
-    parameters = {
-        'Authorization': 'Bearer ' + personal_access_token,
+    headers = {
+        'Authorization': "Bearer " + personal_access_token
     }
-    response = requests.get("https://api.starlingbank.com/api/v2/accounts", headers=parameters)
+    response = requests.get("https://api.starlingbank.com/api/v2/accounts", headers=headers)
     return response.json()['accounts']
 
 
@@ -32,13 +32,28 @@ def get_statement_periods(personal_access_token, account_uid):
         - period
         - partial
     """
-    parameters = {
-        'Authorization': 'Bearer ' + personal_access_token,
+    headers = {
+        'Authorization': "Bearer " + personal_access_token
     }
     response = requests.get(
         "https://api.starlingbank.com/api/v2/accounts/" + account_uid + "/statement/available-periods",
-        headers=parameters)
+        headers=headers)
     return response.json()['periods']
+
+
+def get_statement(personal_access_token, account_uid, period):
+    headers = {
+        'Authorization': "Bearer " + personal_access_token,
+        'Accept': "text/csv"
+    }
+    params = {
+        'yearMonth': period
+    }
+    response = requests.get(
+        "https://api.starlingbank.com/api/v2/accounts/" + account_uid + "/statement/download",
+        headers=headers,
+        params=params)
+    return response.text
 
 
 if __name__ == '__main__':
@@ -48,4 +63,8 @@ if __name__ == '__main__':
     accounts = get_accounts(pat)
     for account in accounts:
         statement_periods = get_statement_periods(pat, account['accountUid'])
-        print(statement_periods)
+        for statement_period in statement_periods:
+            statement = get_statement(pat, account['accountUid'], statement_period['period'])
+            print(statement_period['period'])
+            print(statement)
+            print("================================================")
