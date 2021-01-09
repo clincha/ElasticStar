@@ -42,6 +42,20 @@ def get_statement_periods(personal_access_token, account_uid):
 
 
 def get_statement(personal_access_token, account_uid, period):
+    """
+    Download a statement for a given statement period
+    :param personal_access_token: Users Personal Access token
+    :param account_uid: The accounts unique identifier
+    :param period: The year month string for the statement
+    :return: A csv string with the headers:
+        - Date
+        - Counter Party
+        - Reference
+        - Type
+        - Amount (GBP)
+        - Balance (GBP)
+        - Spending Category
+    """
     headers = {
         'Authorization': "Bearer " + personal_access_token,
         'Accept': "text/csv"
