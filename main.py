@@ -1,4 +1,5 @@
 import os
+from csv import reader
 
 import gspread
 import requests
@@ -92,7 +93,7 @@ if __name__ == '__main__':
             statement = get_statement(pat, account['accountUid'], statement_period['period'])
             statement = statement.split("\n")
             statement = statement[1:]  # Remove heading row
-            for row in statement:
-                statement_lines.append(row.split(","))
-        statement_lines = list(filter(lambda item: item != [''], statement_lines))  # Remove the blank lines
+            for line in reader(statement):
+                statement_lines.append(line)  # 1773
+        statement_lines = list(filter(None, statement_lines))  # Remove the blank lines
         sheet.append_rows(statement_lines, 'USER_ENTERED')
