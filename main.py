@@ -94,6 +94,6 @@ if __name__ == '__main__':
             statement = statement.split("\n")
             statement = statement[1:]  # Remove heading row
             for line in reader(statement):
-                statement_lines.append(line)  # 1773
+                statement_lines.append(line)
         statement_lines = list(filter(None, statement_lines))  # Remove the blank lines
         sheet.append_rows(statement_lines, 'USER_ENTERED')
