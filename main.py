@@ -1,5 +1,6 @@
 import os
 
+import gspread
 import requests
 from dotenv import load_dotenv
 
@@ -73,12 +74,26 @@ def get_statement(personal_access_token, account_uid, period):
 if __name__ == '__main__':
     load_dotenv()
     pat = os.getenv('PERSONAL_ACCESS_TOKEN')
+    workbook_id = os.getenv('WORKBOOK_ID')
+    sheet_name = os.getenv('SHEET_NAME')
+
+    gc = gspread.service_account("service_account.json")
+    workbook = gc.open_by_key(workbook_id)
+    sheet = workbook.worksheet(sheet_name)
+    sheet.clear()
 
     accounts = get_accounts(pat)
     for account in accounts:
         statement_periods = get_statement_periods(pat, account['accountUid'])
+        statement_lines = [get_statement(pat,
+                                         account['accountUid'],
+                                         statement_periods[0]['period']).split("\n")[0].split(",")]  # Heading row
         for statement_period in statement_periods:
             statement = get_statement(pat, account['accountUid'], statement_period['period'])
-            print(statement_period['period'])
-            print(statement)
-            print("================================================")
+            statement = statement.split("\n")
+            statement = statement[1:]  # Remove heading row
+            for row in statement:
+                statement_lines.append(row.split(","))
+        statement_lines = list(filter(lambda item: item != [''], statement_lines))  # Remove the blank lines
+        print(statement_lines)
+        sheet.append_rows(statement_lines, 'USER_ENTERED')
