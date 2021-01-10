@@ -95,5 +95,4 @@ if __name__ == '__main__':
             for row in statement:
                 statement_lines.append(row.split(","))
         statement_lines = list(filter(lambda item: item != [''], statement_lines))  # Remove the blank lines
-        print(statement_lines)
         sheet.append_rows(statement_lines, 'USER_ENTERED')
