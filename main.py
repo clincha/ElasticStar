@@ -93,6 +93,12 @@ def get_full_transaction_history(personal_access_token):
 
 
 def clear_and_fill_sheet(workbook_id, sheet_name, data):
+    """
+    Clears a sheet in a workbook and populates the sheet with the data
+    :param workbook_id: Identifier of the workbook in Google Drive
+    :param sheet_name: Identifier of the worksheet in the workbook
+    :param data: Data to be inserted
+    """
     gc = gspread.service_account("service_account.json")
     workbook = gc.open_by_key(workbook_id)
     sheet = workbook.worksheet(sheet_name)
@@ -100,9 +106,38 @@ def clear_and_fill_sheet(workbook_id, sheet_name, data):
     sheet.append_rows(data, 'USER_ENTERED')
 
 
+def get_saving_spaces_for_account(personal_access_token):
+    """
+    Gets all the saving spaces associated with the given personal access token
+    :param personal_access_token: The personal access token for the Starling account
+    :return: A list of saving spaces which in turn are a list of strings
+    """
+    headers = {
+        'Authorization': "Bearer " + personal_access_token
+    }
+    accounts = get_accounts(personal_access_token)
+    all_goals = [['Name', 'Target Currency', 'Target Amount', 'Saved Currency', 'Saved Amount', 'Saved Percentage']]
+    for account in accounts:
+        response = requests.get(
+            "https://api.starlingbank.com/api/v2/account/" + account['accountUid'] + "/savings-goals",
+            headers=headers)
+        for goal in response.json()['savingsGoalList']:
+            all_goals.append([goal['name'],
+                              goal['target']['currency'],
+                              goal['target']['minorUnits'] / 100,
+                              goal['totalSaved']['currency'],
+                              goal['totalSaved']['minorUnits'] / 100,
+                              goal['savedPercentage']])
+    return all_goals
+
+
 if __name__ == '__main__':
     load_dotenv()
 
     transaction_history = get_full_transaction_history(os.getenv('PERSONAL_ACCESS_TOKEN'))
 
-    clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME'), transaction_history)
+    clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME_TRANSACTION_HISTORY'), transaction_history)
+
+    saving_spaces = get_saving_spaces_for_account(os.getenv('PERSONAL_ACCESS_TOKEN'))
+
+    clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME_SAVING_SPACES'), saving_spaces)
