@@ -72,28 +72,37 @@ def get_statement(personal_access_token, account_uid, period):
     return response.text
 
 
-if __name__ == '__main__':
-    load_dotenv()
-    pat = os.getenv('PERSONAL_ACCESS_TOKEN')
-    workbook_id = os.getenv('WORKBOOK_ID')
-    sheet_name = os.getenv('SHEET_NAME')
+def get_full_transaction_history(personal_access_token):
+    """
+    Gets the entire transaction history for all accounts associated with the personal access token provided
+    :param personal_access_token: The Starling Personal Access Token
+    :return: A list of transaction lines, which are in turn a list of strings
+    """
+    accounts = get_accounts(personal_access_token)
+    statement_lines = []
+    for account in accounts:
+        statement_periods = get_statement_periods(personal_access_token, account['accountUid'])
+        for statement_period in statement_periods:
+            statement = get_statement(personal_access_token, account['accountUid'], statement_period['period'])
+            statement = statement.split("\n")
+            if statement_lines:
+                statement = statement[1:]  # Remove heading row if this isn't the first statement
+            for line in reader(statement):
+                statement_lines.append(line)
+    return list(filter(None, statement_lines))  # Remove the blank lines
 
+
+def clear_and_fill_sheet(workbook_id, sheet_name, data):
     gc = gspread.service_account("service_account.json")
     workbook = gc.open_by_key(workbook_id)
     sheet = workbook.worksheet(sheet_name)
     sheet.clear()
+    sheet.append_rows(data, 'USER_ENTERED')
 
-    accounts = get_accounts(pat)
-    for account in accounts:
-        statement_periods = get_statement_periods(pat, account['accountUid'])
-        statement_lines = [get_statement(pat,
-                                         account['accountUid'],
-                                         statement_periods[0]['period']).split("\n")[0].split(",")]  # Heading row
-        for statement_period in statement_periods:
-            statement = get_statement(pat, account['accountUid'], statement_period['period'])
-            statement = statement.split("\n")
-            statement = statement[1:]  # Remove heading row
-            for line in reader(statement):
-                statement_lines.append(line)
-        statement_lines = list(filter(None, statement_lines))  # Remove the blank lines
-        sheet.append_rows(statement_lines, 'USER_ENTERED')
+
+if __name__ == '__main__':
+    load_dotenv()
+
+    transaction_history = get_full_transaction_history(os.getenv('PERSONAL_ACCESS_TOKEN'))
+
+    clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME'), transaction_history)
