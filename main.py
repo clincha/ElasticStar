@@ -4,6 +4,7 @@ from csv import reader
 import gspread
 import requests
 from dotenv import load_dotenv
+from gspread_formatting import *
 
 
 def get_accounts(personal_access_token):
@@ -94,7 +95,7 @@ def get_full_transaction_history(personal_access_token):
 
 def clear_and_fill_sheet(workbook_id, sheet_name, data):
     """
-    Clears a sheet in a workbook and populates the sheet with the data
+    Clears a sheet in a workbook and populates the sheet with the data, highlights and freezes the first row
     :param workbook_id: Identifier of the workbook in Google Drive
     :param sheet_name: Identifier of the worksheet in the workbook
     :param data: Data to be inserted
@@ -104,6 +105,15 @@ def clear_and_fill_sheet(workbook_id, sheet_name, data):
     sheet = workbook.worksheet(sheet_name)
     sheet.clear()
     sheet.append_rows(data, 'USER_ENTERED')
+
+    # Formatting
+
+    fmt = CellFormat(
+        textFormat=textFormat(bold=True),
+        horizontalAlignment='CENTER'
+    )
+    format_cell_range(sheet, '1:1', fmt)
+    set_frozen(sheet, rows=1)
 
 
 def get_saving_spaces_for_account(personal_access_token):
@@ -116,28 +126,31 @@ def get_saving_spaces_for_account(personal_access_token):
         'Authorization': "Bearer " + personal_access_token
     }
     accounts = get_accounts(personal_access_token)
-    all_goals = [['Name', 'Target Currency', 'Target Amount', 'Saved Currency', 'Saved Amount', 'Saved Percentage']]
+    all_goals = [['Account Name',
+                  'Space Name',
+                  'Target Amount',
+                  'Saved Amount',
+                  'Saved Percentage']]
     for account in accounts:
         response = requests.get(
             "https://api.starlingbank.com/api/v2/account/" + account['accountUid'] + "/savings-goals",
             headers=headers)
         for goal in response.json()['savingsGoalList']:
-            all_goals.append([goal['name'],
-                              goal['target']['currency'],
-                              goal['target']['minorUnits'] / 100,
-                              goal['totalSaved']['currency'],
-                              goal['totalSaved']['minorUnits'] / 100,
-                              goal['savedPercentage']])
+            all_goals.append([account['name'],
+                              goal['name'],
+                              '£' + str(goal['target']['minorUnits'] / 100),
+                              '£' + str(goal['totalSaved']['minorUnits'] / 100),
+                              str(goal['savedPercentage']) + '%'])
     return all_goals
 
 
 if __name__ == '__main__':
     load_dotenv()
-
+    print("Getting transaction history")
     transaction_history = get_full_transaction_history(os.getenv('PERSONAL_ACCESS_TOKEN'))
-
+    print("Inputting transaction history")
     clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME_TRANSACTION_HISTORY'), transaction_history)
-
+    print("Getting spaces data")
     saving_spaces = get_saving_spaces_for_account(os.getenv('PERSONAL_ACCESS_TOKEN'))
-
+    print("Inputting spaces data")
     clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME_SAVING_SPACES'), saving_spaces)
