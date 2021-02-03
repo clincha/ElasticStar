@@ -16,6 +16,11 @@ jobs:
       with:
         command: install
     - name: Run
+      env:
+        SHEET_NAME_TRANSACTION_HISTORY: "Starling Account"
+        SHEET_NAME_SAVING_SPACES: "Starling Spaces"
+        PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        WORKBOOK_ID: ${{ secrets.WORKBOOK_ID }}
       uses: VaultVulp/action-pipenv@v2.0.1
       with:
         command: run python main.py
