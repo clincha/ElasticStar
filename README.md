@@ -1,3 +1,5 @@
+![Populate Data](https://github.com/clincha/StarSheet/workflows/Populate%20Data/badge.svg?branch=master)
+
 1. Copy the example.env file and rename it to .env
 2. Go to https://developer.starlingbank.com/personal/list
 3. Copy or create and copy the Personal Access Token
