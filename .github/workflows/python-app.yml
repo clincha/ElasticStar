@@ -19,12 +19,11 @@ jobs:
         with:
           command: install
 
-      - name: Decode Google Service Account
-        env:
-          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-        uses: VaultVulp/action-pipenv@v2.0.1
+      - name: Create Google service account credential file
+        uses: timheuer/base64-to-file@v1
         with:
-          command: run python decodeServiceAccount.py
+          fileName: 'service_account.json'
+          encodedString: ${{ secrets.SERVICE_ACCOUNT }}
 
       - name: Run
         env:
