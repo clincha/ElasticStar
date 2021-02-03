@@ -10,22 +10,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Install dependecies
-      uses: VaultVulp/action-pipenv@v2.0.1
-      with:
-        command: install
-    - name: Decode Google Service Account
-      uses: VaultVulp/action-pipenv@v2.0.1
-      with:
-        command: run python decodeServiceAccount.py
-    - name: Run
-      env:
-        SHEET_NAME_TRANSACTION_HISTORY: "Starling Account"
-        SHEET_NAME_SAVING_SPACES: "Starling Spaces"
-        PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        WORKBOOK_ID: ${{ secrets.WORKBOOK_ID }}
-        SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-      uses: VaultVulp/action-pipenv@v2.0.1
-      with:
-        command: run python main.py
+      - uses: actions/checkout@v2
+
+      - name: Install dependecies
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: install
+
+      - name: Decode Google Service Account
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: run python decodeServiceAccount.py
+
+      - name: Run
+        env:
+          SHEET_NAME_TRANSACTION_HISTORY: "Starling Account"
+          SHEET_NAME_SAVING_SPACES: "Starling Spaces"
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          WORKBOOK_ID: ${{ secrets.WORKBOOK_ID }}
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: run python main.py
