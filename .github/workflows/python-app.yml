@@ -19,13 +19,14 @@ jobs:
         with:
           command: install
 
-      - name: Create Google service account credential file
-        uses: timheuer/base64-to-file@v1
+      - name: Google service account file creation
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
+        uses: VaultVulp/action-pipenv@v2.0.1
         with:
-          fileName: 'service_account.json'
-          encodedString: ${{ secrets.SERVICE_ACCOUNT }}
+          command: run python decodeServiceAccount.py
 
-      - name: Run
+      - name: Run main script
         env:
           SHEET_NAME_TRANSACTION_HISTORY: "Starling Account"
           SHEET_NAME_SAVING_SPACES: "Starling Spaces"
