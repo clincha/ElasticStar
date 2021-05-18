@@ -13,6 +13,7 @@
         <list>
           <option value="app.models.flask_sqlalchemy" />
           <option value="requests.models.Response.__getitem__" />
+          <option value="main.textFormat" />
         </list>
       </option>
     </inspection_tool>

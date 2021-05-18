@@ -136,11 +136,17 @@ def get_saving_spaces_for_account(personal_access_token):
             "https://api.starlingbank.com/api/v2/account/" + account['accountUid'] + "/savings-goals",
             headers=headers)
         for goal in response.json()['savingsGoalList']:
-            all_goals.append([account['name'],
-                              goal['name'],
-                              '£' + str(goal['target']['minorUnits'] / 100),
-                              '£' + str(goal['totalSaved']['minorUnits'] / 100),
-                              str(goal['savedPercentage']) + '%'])
+            accountName = account['name']
+            goalName = goal['name']
+            totalSaved = '£{0}'.format(goal['totalSaved']['minorUnits'] / 100)
+
+            target = 'N/A'
+            totalSavedPercentage = 'N/A'
+            if 'target' in goal:
+                target = '£{0}'.format(goal['target']['minorUnits'] / 100)
+                totalSavedPercentage = '{0}%'.format(goal['savedPercentage'])
+
+            all_goals.append([accountName, goalName, target, totalSaved, totalSavedPercentage])
     return all_goals
 
 
