@@ -144,7 +144,8 @@ def get_saving_spaces_for_account(personal_access_token):
             totalSavedPercentage = 'N/A'
             if 'target' in goal:
                 target = '£{0}'.format(goal['target']['minorUnits'] / 100)
-                totalSavedPercentage = '{0}%'.format(goal['savedPercentage'])
+                if 'savedPercentage' in goal:
+                    totalSavedPercentage = '{0}%'.format(goal['savedPercentage'])
 
             all_goals.append([accountName, goalName, target, totalSaved, totalSavedPercentage])
     return all_goals
