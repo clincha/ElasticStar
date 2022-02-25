@@ -23,6 +23,8 @@ def get_accounts(personal_access_token):
         'Authorization': "Bearer " + personal_access_token
     }
     response = requests.get("https://api.starlingbank.com/api/v2/accounts", headers=headers)
+    print(response.status_code)
+    print(response.reason)
     return response.json()['accounts']
 
 
