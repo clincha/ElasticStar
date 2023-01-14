@@ -1,10 +1,13 @@
 import os
 from csv import reader
 
-import gspread
+# import gspread
 import requests
 from dotenv import load_dotenv
-from gspread_formatting import *
+from elasticsearch import Elasticsearch
+from datetime import datetime
+
+# from gspread_formatting import *
 
 
 def get_accounts(personal_access_token):
@@ -153,11 +156,35 @@ def get_saving_spaces_for_account(personal_access_token):
 
 if __name__ == '__main__':
     load_dotenv()
-    print("Getting transaction history")
-    transaction_history = get_full_transaction_history(os.getenv('PERSONAL_ACCESS_TOKEN'))
-    print("Inputting transaction history")
-    clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME_TRANSACTION_HISTORY'), transaction_history)
-    print("Getting spaces data")
-    saving_spaces = get_saving_spaces_for_account(os.getenv('PERSONAL_ACCESS_TOKEN'))
-    print("Inputting spaces data")
-    clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME_SAVING_SPACES'), saving_spaces)
+    pat = os.getenv('PERSONAL_ACCESS_TOKEN')
+    # print("Getting transaction history")
+    # transaction_history = get_full_transaction_history(os.getenv('PERSONAL_ACCESS_TOKEN'))
+    # print(transaction_history)
+    account = get_accounts(pat)[0]['accountUid']
+    statement_periods = get_statement_periods(pat, account)
+    statement = get_statement(pat, account, statement_periods[2]['period'])
+    statement = statement.split("\n")
+    headers = statement[0].split(",")
+    lines = []
+    for statement_lines in statement[1:]:
+        line = {}
+        for index, item in enumerate(statement_lines.split(",")):
+            if item and headers[index] == "Date":
+                print(item)
+                item = str(datetime.strptime(item, "%d/%m/%Y").date())
+            line[headers[index]] = item
+        lines.append(line)
+    print(lines[0])
+    elastic_pass = ""
+    elastic = Elasticsearch(
+        cloud_id="dev_v2:ZXVyb3BlLXdlc3QyLmdjcC5lbGFzdGljLWNsb3VkLmNvbTo0NDMkMmZiY2QzMGFiYjk4NGQ3ZWJjYjBlZDU3YzFjN2E1MmIkMDgzMjdiNGIwNDM1NDQxMThkMTM0Y2Q3YTJhYzQ5ODU=",
+        basic_auth=("elastic", elastic_pass))
+    for line in lines:
+        elastic.index(index="starling", document=line)
+
+    # print("Inputting transaction history")
+    # clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME_TRANSACTION_HISTORY'), transaction_history)
+    # print("Getting spaces data")
+    # saving_spaces = get_saving_spaces_for_account(os.getenv('PERSONAL_ACCESS_TOKEN'))
+    # print("Inputting spaces data")
+    # clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME_SAVING_SPACES'), saving_spaces)
