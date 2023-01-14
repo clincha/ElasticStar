@@ -1,13 +1,12 @@
 import os
 from csv import reader
+from io import StringIO
 
-# import gspread
 import requests
 from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
 from datetime import datetime
-
-# from gspread_formatting import *
+import pandas
 
 
 def get_accounts(personal_access_token):
@@ -96,29 +95,6 @@ def get_full_transaction_history(personal_access_token):
     return list(filter(None, statement_lines))  # Remove the blank lines
 
 
-def clear_and_fill_sheet(workbook_id, sheet_name, data):
-    """
-    Clears a sheet in a workbook and populates the sheet with the data, highlights and freezes the first row
-    :param workbook_id: Identifier of the workbook in Google Drive
-    :param sheet_name: Identifier of the worksheet in the workbook
-    :param data: Data to be inserted
-    """
-    gc = gspread.service_account("service_account.json")
-    workbook = gc.open_by_key(workbook_id)
-    sheet = workbook.worksheet(sheet_name)
-    sheet.clear()
-    sheet.append_rows(data, 'USER_ENTERED')
-
-    # Formatting
-
-    fmt = CellFormat(
-        textFormat=textFormat(bold=True),
-        horizontalAlignment='CENTER'
-    )
-    format_cell_range(sheet, '1:1', fmt)
-    set_frozen(sheet, rows=1)
-
-
 def get_saving_spaces_for_account(personal_access_token):
     """
     Gets all the saving spaces associated with the given personal access token
@@ -157,34 +133,23 @@ def get_saving_spaces_for_account(personal_access_token):
 if __name__ == '__main__':
     load_dotenv()
     pat = os.getenv('PERSONAL_ACCESS_TOKEN')
-    # print("Getting transaction history")
-    # transaction_history = get_full_transaction_history(os.getenv('PERSONAL_ACCESS_TOKEN'))
-    # print(transaction_history)
-    account = get_accounts(pat)[0]['accountUid']
-    statement_periods = get_statement_periods(pat, account)
-    statement = get_statement(pat, account, statement_periods[2]['period'])
-    statement = statement.split("\n")
-    headers = statement[0].split(",")
-    lines = []
-    for statement_lines in statement[1:]:
-        line = {}
-        for index, item in enumerate(statement_lines.split(",")):
-            if item and headers[index] == "Date":
-                print(item)
-                item = str(datetime.strptime(item, "%d/%m/%Y").date())
-            line[headers[index]] = item
-        lines.append(line)
-    print(lines[0])
+    print("Getting transaction history")
+    transaction_history = get_full_transaction_history(os.getenv('PERSONAL_ACCESS_TOKEN'))
+
+    transaction_history_json = []
+    headers = transaction_history[0]
+    for transaction in transaction_history[1:]:
+        transaction_json = {}
+        for index, field in enumerate(transaction):
+            if headers[index] == "Date":
+                field = str(datetime.strptime(field, "%d/%m/%Y").date())
+            transaction_json[headers[index]] = field
+        transaction_history_json.append(transaction_json)
+
     elastic_pass = ""
     elastic = Elasticsearch(
         cloud_id="dev_v2:ZXVyb3BlLXdlc3QyLmdjcC5lbGFzdGljLWNsb3VkLmNvbTo0NDMkMmZiY2QzMGFiYjk4NGQ3ZWJjYjBlZDU3YzFjN2E1MmIkMDgzMjdiNGIwNDM1NDQxMThkMTM0Y2Q3YTJhYzQ5ODU=",
         basic_auth=("elastic", elastic_pass))
-    for line in lines:
-        elastic.index(index="starling", document=line)
 
-    # print("Inputting transaction history")
-    # clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME_TRANSACTION_HISTORY'), transaction_history)
-    # print("Getting spaces data")
-    # saving_spaces = get_saving_spaces_for_account(os.getenv('PERSONAL_ACCESS_TOKEN'))
-    # print("Inputting spaces data")
-    # clear_and_fill_sheet(os.getenv('WORKBOOK_ID'), os.getenv('SHEET_NAME_SAVING_SPACES'), saving_spaces)
+    for line in transaction_history_json:
+        elastic.index(index="starling", document=line)
