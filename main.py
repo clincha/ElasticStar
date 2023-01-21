@@ -146,9 +146,9 @@ if __name__ == '__main__':
             transaction_json[headers[index]] = field
         transaction_history_json.append(transaction_json)
 
-    elastic_pass = ""
+    elastic_pass = "k4BTtlAky8ci6EVtB1M9F3dn"
     elastic = Elasticsearch(
-        cloud_id="dev_v2:ZXVyb3BlLXdlc3QyLmdjcC5lbGFzdGljLWNsb3VkLmNvbTo0NDMkMmZiY2QzMGFiYjk4NGQ3ZWJjYjBlZDU3YzFjN2E1MmIkMDgzMjdiNGIwNDM1NDQxMThkMTM0Y2Q3YTJhYzQ5ODU=",
+        cloud_id="dev_v3:ZXUtd2VzdC0yLmF3cy5jbG91ZC5lcy5pbzo0NDMkYzA4NzE1NDI1NjE3NGY3YTk4NjgxZDAzY2JjZjE4NWMkODAwNjI5N2JhZDRhNGIwMjkyYTYxMmZhZmRjZjVjNjA=",
         basic_auth=("elastic", elastic_pass))
 
     for line in transaction_history_json:
