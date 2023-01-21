@@ -1,12 +1,10 @@
 import os
 from csv import reader
-from io import StringIO
 
 import requests
 from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
 from datetime import datetime
-import pandas
 
 
 def get_accounts(personal_access_token):
