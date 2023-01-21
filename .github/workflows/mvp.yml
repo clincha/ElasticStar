@@ -1,4 +1,4 @@
-name: Populate Data
+name: Populate Elastic Cloud
 
 on:
   workflow_dispatch:
