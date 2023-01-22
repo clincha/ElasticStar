@@ -1,4 +1,4 @@
-[![Populate Elastic Cloud](https://github.com/clincha/StarSheet/actions/workflows/mvp.yml/badge.svg?branch=master)](https://github.com/clincha/StarSheet/actions/workflows/mvp.yml)
+[![Populate Elastic Cloud](https://github.com/clincha/StarSheet/actions/workflows/populate-elastic-cloud.yml/badge.svg)](https://github.com/clincha/StarSheet/actions/workflows/populate-elastic-cloud.yml)
 
 This is a project to visualise the data from my bank accounts. The basic graphs that ship with the banking app aren't the best. I'd also like to report on custom metrics that are important to me. This lead me to pump the data into a Google spreadsheet but this was brittle and making the charts took a lot of effort.
 
