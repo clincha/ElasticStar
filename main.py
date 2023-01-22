@@ -184,4 +184,3 @@ if __name__ == '__main__':
                                      get_accounts(os.getenv('PERSONAL_ACCESS_TOKEN'))[0]['accountUid'])
     ):
         progress.update(1)
-    print("Success!")
