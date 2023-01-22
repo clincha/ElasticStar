@@ -129,11 +129,13 @@ def get_saving_spaces_for_account(personal_access_token):
 
 
 if __name__ == '__main__':
+    print("Loading variables...")
     load_dotenv()
-    pat = os.getenv('PERSONAL_ACCESS_TOKEN')
-    print("Getting transaction history")
+    print("Success!")
+    print("Getting transaction history...")
     transaction_history = get_full_transaction_history(os.getenv('PERSONAL_ACCESS_TOKEN'))
-
+    print("Success!")
+    print("Adding transactions to Elastic...")
     transaction_history_json = []
     headers = transaction_history[0]
     for transaction in transaction_history[1:]:
@@ -150,3 +152,4 @@ if __name__ == '__main__':
 
     for line in transaction_history_json:
         elastic.index(index="starling", document=line)
+    print("Success!")

@@ -1,0 +1,169 @@
+{
+  "resources": {
+    "integrations_server": [],
+    "elasticsearch": [
+      {
+        "region": "aws-eu-west-2",
+        "settings": {
+          "dedicated_masters_threshold": 6
+        },
+        "plan": {
+          "cluster_topology": [
+            {
+              "zone_count": 1,
+              "elasticsearch": {
+                "node_attributes": {
+                  "data": "hot"
+                }
+              },
+              "instance_configuration_id": "aws.es.datahot.i3",
+              "node_roles": [
+                "master",
+                "ingest",
+                "transform",
+                "data_hot",
+                "remote_cluster_client",
+                "data_content"
+              ],
+              "id": "hot_content",
+              "size": {
+                "value": 1024,
+                "resource": "memory"
+              }
+            },
+            {
+              "zone_count": 2,
+              "elasticsearch": {
+                "node_attributes": {
+                  "data": "warm"
+                }
+              },
+              "instance_configuration_id": "aws.es.datawarm.d3",
+              "node_roles": [
+                "data_warm",
+                "remote_cluster_client"
+              ],
+              "id": "warm",
+              "size": {
+                "resource": "memory",
+                "value": 0
+              }
+            },
+            {
+              "zone_count": 1,
+              "elasticsearch": {
+                "node_attributes": {
+                  "data": "cold"
+                }
+              },
+              "instance_configuration_id": "aws.es.datacold.d3",
+              "node_roles": [
+                "data_cold",
+                "remote_cluster_client"
+              ],
+              "id": "cold",
+              "size": {
+                "resource": "memory",
+                "value": 0
+              }
+            },
+            {
+              "zone_count": 1,
+              "elasticsearch": {
+                "node_attributes": {
+                  "data": "frozen"
+                }
+              },
+              "instance_configuration_id": "aws.es.datafrozen.i3en.2",
+              "node_roles": [
+                "data_frozen"
+              ],
+              "id": "frozen",
+              "size": {
+                "resource": "memory",
+                "value": 0
+              }
+            },
+            {
+              "zone_count": 3,
+              "instance_configuration_id": "aws.es.master.c5d",
+              "node_roles": [
+                "master",
+                "remote_cluster_client"
+              ],
+              "id": "master",
+              "size": {
+                "resource": "memory",
+                "value": 0
+              }
+            },
+            {
+              "zone_count": 2,
+              "instance_configuration_id": "aws.es.coordinating.m5d",
+              "node_roles": [
+                "ingest",
+                "remote_cluster_client"
+              ],
+              "id": "coordinating",
+              "size": {
+                "resource": "memory",
+                "value": 0
+              }
+            },
+            {
+              "zone_count": 1,
+              "instance_configuration_id": "aws.es.ml.c5d",
+              "node_roles": [
+                "ml",
+                "remote_cluster_client"
+              ],
+              "id": "ml",
+              "size": {
+                "resource": "memory",
+                "value": 0
+              }
+            }
+          ],
+          "elasticsearch": {
+            "version": "8.6.0",
+            "enabled_built_in_plugins": []
+          },
+          "deployment_template": {
+            "id": "aws-storage-optimized-v3"
+          }
+        },
+        "ref_id": "main-elasticsearch"
+      }
+    ],
+    "enterprise_search": [],
+    "kibana": [
+      {
+        "elasticsearch_cluster_ref_id": "main-elasticsearch",
+        "region": "aws-eu-west-2",
+        "plan": {
+          "cluster_topology": [
+            {
+              "instance_configuration_id": "aws.kibana.c5d",
+              "zone_count": 1,
+              "size": {
+                "resource": "memory",
+                "value": 1024
+              }
+            }
+          ],
+          "kibana": {
+            "version": "8.6.0"
+          }
+        },
+        "ref_id": "main-kibana"
+      }
+    ]
+  },
+  "settings": {
+    "autoscaling_enabled": false
+  },
+  "name": "My deployment",
+  "metadata": {
+    "system_owned": false
+  }
+}
