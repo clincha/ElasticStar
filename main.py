@@ -144,8 +144,13 @@ def get_transaction_feed(personal_access_token, account_id):
                             "maxTransactionTimestamp=" + datetime.utcnow().strftime(timestamp_format),
                             headers=headers
                             )
-    return response.json()
-
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(response.status_code)
+        print(response.reason)
+        print(response.url)
+        exit(1)
 
 def generate_actions(personal_access_token, account_id):
     for feedItem in get_transaction_feed(personal_access_token, account_id)['feedItems']:

@@ -2,6 +2,9 @@ name: Populate Elastic Cloud
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - masterK
 
 jobs:
   run:
