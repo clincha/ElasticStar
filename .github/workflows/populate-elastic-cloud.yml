@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests python-dotenv elasticsearch
+          pip install requests python-dotenv elasticsearch tqdm
 
       - name: Run main script
         env:

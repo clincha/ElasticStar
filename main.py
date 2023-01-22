@@ -4,7 +4,13 @@ from csv import reader
 import requests
 from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
+from elasticsearch.helpers import streaming_bulk
 from datetime import datetime
+import tqdm
+
+base_url = "https://api.starlingbank.com/api/v2/"
+timestamp_format = "%Y-%m-%dT%H:%M:%SZ"
+elastic_index = "starling"
 
 
 def get_accounts(personal_access_token):
@@ -128,28 +134,48 @@ def get_saving_spaces_for_account(personal_access_token):
     return all_goals
 
 
+def get_transaction_feed(personal_access_token, account_id):
+    headers = {
+        'Authorization': "Bearer " + personal_access_token
+    }
+    response = requests.get(base_url + "feed/account/" + account_id + "/settled-transactions-between?" +
+                            "minTransactionTimestamp=" + datetime.min.strftime(timestamp_format) +
+                            "&"
+                            "maxTransactionTimestamp=" + datetime.utcnow().strftime(timestamp_format),
+                            headers=headers
+                            )
+    return response.json()
+
+
+def generate_actions(personal_access_token, account_id):
+    for feedItem in get_transaction_feed(personal_access_token, account_id)['feedItems']:
+        document = {
+            "_id": feedItem['feedItemUid']
+        }
+        feedItem.pop('feedItemUid')
+        document.update(feedItem)
+        yield document
+
+
 if __name__ == '__main__':
     print("Loading variables...")
     load_dotenv()
     print("Success!")
     print("Getting transaction history...")
-    transaction_history = get_full_transaction_history(os.getenv('PERSONAL_ACCESS_TOKEN'))
+    transactions = get_transaction_feed(os.getenv('PERSONAL_ACCESS_TOKEN'),
+                                        get_accounts(os.getenv('PERSONAL_ACCESS_TOKEN'))[0]['accountUid'])
     print("Success!")
     print("Adding transactions to Elastic...")
-    transaction_history_json = []
-    headers = transaction_history[0]
-    for transaction in transaction_history[1:]:
-        transaction_json = {}
-        for index, field in enumerate(transaction):
-            if headers[index] == "Date":
-                field = str(datetime.strptime(field, "%d/%m/%Y").date())
-            transaction_json[headers[index]] = field
-        transaction_history_json.append(transaction_json)
-
     elastic = Elasticsearch(
         cloud_id=os.getenv("ELASTIC_CLOUD_ID"),
         basic_auth=("elastic", os.getenv("ELASTIC_CLOUD_PASSWORD")))
 
-    for line in transaction_history_json:
-        elastic.index(index="starling", document=line)
+    progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
+    for ok, action in streaming_bulk(
+            client=elastic,
+            index=elastic_index,
+            actions=generate_actions(os.getenv('PERSONAL_ACCESS_TOKEN'),
+                                     get_accounts(os.getenv('PERSONAL_ACCESS_TOKEN'))[0]['accountUid'])
+    ):
+        progress.update(1)
     print("Success!")
