@@ -139,7 +139,7 @@ def get_transaction_feed(personal_access_token, account_id):
         'Authorization': "Bearer " + personal_access_token
     }
     response = requests.get(base_url + "feed/account/" + account_id + "/settled-transactions-between?" +
-                            "minTransactionTimestamp=" + datetime.min.strftime(timestamp_format) +
+                            "minTransactionTimestamp=" + "2000-01-22T20:51:51Z" +
                             "&"
                             "maxTransactionTimestamp=" + datetime.utcnow().strftime(timestamp_format),
                             headers=headers
@@ -151,6 +151,7 @@ def get_transaction_feed(personal_access_token, account_id):
         print(response.reason)
         print(response.url)
         exit(1)
+
 
 def generate_actions(personal_access_token, account_id):
     for feedItem in get_transaction_feed(personal_access_token, account_id)['feedItems']:
