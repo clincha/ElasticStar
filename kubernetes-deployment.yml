@@ -34,6 +34,14 @@ spec:
             periodSeconds: 30
             initialDelaySeconds: 60
             failureThreshold: 3
+          volumeMounts:
+            - mountPath: /app/ElasticStar/.env
+              name: environment-volume
+              readOnly: true
+      volumes:
+        - name: environment-volume
+          configMap:
+            name: environment
 ---
 apiVersion: v1
 kind: Service

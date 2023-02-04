@@ -13,5 +13,13 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3.1.0
 
+      - name: create-environment-file
+        run: echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY" > .env
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+
+      - name: create-environment-configmap
+        run: kubectl create configmap environment --from-file .env -o yaml --dry-run=client | kubectl apply -f -
+
       - name: kubectl
         run: kubectl apply -f kubernetes-deployment.yml

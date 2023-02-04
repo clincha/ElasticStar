@@ -6,12 +6,12 @@ RUN python -m pip install daphne
 
 RUN python -m pip install -r requirements.txt
 
-COPY . /app
+COPY ElasticStar /app
 
 WORKDIR /app
 
 
-WORKDIR /app/ElasticStar
+WORKDIR /app
 
 EXPOSE 8000
 
