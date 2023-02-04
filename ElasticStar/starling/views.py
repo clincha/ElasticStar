@@ -30,7 +30,7 @@ def callback(request):
     state = request.GET.get('state')
 
     if state != 'ANGUS12345':
-        return HttpResponseServerError
+        return HttpResponseServerError()
 
     headers = {
         'application': 'x-www-form-urlencoded'
@@ -55,4 +55,4 @@ def callback(request):
     else:
         print(response.status_code)
         print(response.reason)
-        return HttpResponseServerError
+        return HttpResponseServerError()
