@@ -25,7 +25,7 @@ jobs:
 #        uses: docker/metadata-action@v4.3.0
 #        with:
 #          images: ${{ secrets.DOCKER_USERNAME }}/elastic-star
-
+#
       - name: Build and push Docker image
         uses: docker/build-push-action@v4.0.0
         with:
