@@ -33,8 +33,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-        env:
-          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
 
   deploy:
     runs-on: [ self-hosted, kubernetes, bristol ]
@@ -47,9 +45,12 @@ jobs:
         run: kubectl delete -f kubernetes-deployment.yml
 
       - name: create-environment-file
-        run: echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY" > .env
+        run: | 
+          echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY" >> .env
+          echo "STARLING_CLIENT_SECRET=$STARLING_CLIENT_SECRET" >> .env
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          STARLING_CLIENT_SECRET: ${{ secrets.STARLING_CLIENT_SECRET }}
 
       - name: create-environment-configmap
         run: kubectl create configmap environment --from-file .env -o yaml --dry-run=client | kubectl apply -f -
