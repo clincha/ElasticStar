@@ -21,7 +21,7 @@ spec:
           - name: ndots
             value: "1"
       containers:
-        - image: clincha/elastic-star:v1
+        - image: clincha/elastic-star:6-add-additional-accounts
           name: elasticstar
           resources: { }
           env:
