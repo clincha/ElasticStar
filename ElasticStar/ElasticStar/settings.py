@@ -27,9 +27,12 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "10.244.4.50",
-    "192.168.1.22",
-    "localhost"
+    "localhost",
+]
+
+ALLOWED_CIDR_NETS = [
+    '192.168.1.0/24',
+    '10.244.0.0/16',
 ]
 
 # Application definition
@@ -53,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allow_cidr.middleware.AllowCIDRMiddleware',
 ]
 
 ROOT_URLCONF = 'ElasticStar.urls'
