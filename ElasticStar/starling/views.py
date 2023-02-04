@@ -32,10 +32,6 @@ def callback(request):
     if state != 'ANGUS12345':
         return HttpResponseServerError()
 
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-
     parameters = {
         'code': code,
         'client_id': client_id,
@@ -46,7 +42,6 @@ def callback(request):
 
     response = requests.post(
         url='https://api-sandbox.starlingbank.com/oauth/access-token',
-        headers=headers,
         params=parameters
     )
 
