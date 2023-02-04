@@ -1,4 +1,4 @@
-name: Push image to Docker Hub
+name: Deploy
 
 on:
   workflow_dispatch:
@@ -33,3 +33,23 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    runs-on: [ self-hosted, kubernetes, bristol ]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3.1.0
+
+      - name: kubectl
+        run: kubectl delete -f kubernetes-deployment.yml
+
+      - name: create-environment-file
+        run: echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY" > .env
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+
+      - name: create-environment-configmap
+        run: kubectl create configmap environment --from-file .env -o yaml --dry-run=client | kubectl apply -f -
+
+      - name: kubectl
+        run: kubectl apply -f kubernetes-deployment.yml
