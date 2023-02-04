@@ -39,6 +39,7 @@ spec:
               name: environment-volume
               subPath: .env
               readOnly: true
+          imagePullPolicy: Always
       volumes:
         - name: environment-volume
           configMap:
