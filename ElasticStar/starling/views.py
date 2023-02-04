@@ -1,7 +1,7 @@
 import os
 
 import requests
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponseServerError
 from django.shortcuts import render
 from django.template import loader
@@ -50,4 +50,9 @@ def callback(request):
         params=parameters
     )
 
-    print(response.json())
+    if response.status_code == 200:
+        return JsonResponse(response.json())
+    else:
+        print(response.status_code)
+        print(response.reason)
+        return HttpResponseServerError
