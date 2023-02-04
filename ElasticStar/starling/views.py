@@ -33,7 +33,7 @@ def callback(request):
         return HttpResponseServerError()
 
     headers = {
-        'application': 'x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded'
     }
 
     parameters = {
