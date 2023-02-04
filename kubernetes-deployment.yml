@@ -37,6 +37,7 @@ spec:
           volumeMounts:
             - mountPath: /app/.env
               name: environment-volume
+              subPath: .env
               readOnly: true
       volumes:
         - name: environment-volume
