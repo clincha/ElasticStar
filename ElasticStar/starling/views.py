@@ -44,7 +44,7 @@ def callback(request):
         'redirect_uri': redirect_uri
     }
 
-    response = requests.get(
+    response = requests.post(
         url='https://api-sandbox.starlingbank.com/oauth/access-token',
         headers=headers,
         params=parameters
