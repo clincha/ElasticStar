@@ -53,6 +53,4 @@ def callback(request):
     if response.status_code == 200:
         return JsonResponse(response.json())
     else:
-        print(response.status_code)
-        print(response.reason)
-        return HttpResponseServerError()
+        return HttpResponseServerError(response.reason)
