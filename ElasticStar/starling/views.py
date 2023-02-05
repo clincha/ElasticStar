@@ -1,10 +1,9 @@
 import os
 
 import requests
-from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponseServerError
+from django.http import JsonResponse
 from django.shortcuts import render
-from django.template import loader
 from dotenv import load_dotenv, find_dotenv
 
 client_id = 'BG887EBCs33ZRPzbkfLl'
@@ -30,7 +29,7 @@ def callback(request):
     state = request.GET.get('state')
 
     if state != 'ANGUS12345':
-        return HttpResponseServerError()
+        return HttpResponseServerError('Incorrect state')
 
     parameters = {
         'code': code,
@@ -48,4 +47,4 @@ def callback(request):
     if response.status_code == 200:
         return JsonResponse(response.json())
     else:
-        return HttpResponseServerError(response.reason)
+        return HttpResponseServerError(str(response.status_code) + ' - ' + response.reason)
