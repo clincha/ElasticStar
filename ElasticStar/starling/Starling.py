@@ -8,9 +8,9 @@ sandbox = True
 
 class Starling(object):
     if sandbox:
-        base_url = "https://api-sandbox.starlingbank.com"
+        base_url = "https://api-sandbox.starlingbank.com/api/v2/"
     else:
-        base_url = "https://api.starlingbank.com"
+        base_url = "https://api.starlingbank.com/api/v2/"
     timestamp_format = "%Y-%m-%dT%H:%M:%SZ"
 
     def __init__(self, personal_access_token):
@@ -29,7 +29,7 @@ class Starling(object):
         """
         headers = {
             'Authorization': "Bearer " + self.personal_access_token,
-            'User-Agent': 'elasticstar'
+            'User-Agent': user_agent
         }
         response = requests.get(self.base_url + "accounts", headers=headers)
         response.raise_for_status()
@@ -42,7 +42,7 @@ class Starling(object):
         """
         headers = {
             'Authorization': "Bearer " + self.personal_access_token,
-            'User-Agent': 'elasticstar'
+            'User-Agent': user_agent
         }
         response = requests.get(self.base_url + "account/" +
                                 account_uid + "/savings-goals",
@@ -53,7 +53,7 @@ class Starling(object):
     def get_transaction_feed(self, account_uid):
         headers = {
             'Authorization': "Bearer " + self.personal_access_token,
-            'User-Agent': 'elasticstar'
+            'User-Agent': user_agent
         }
         response = requests.get(self.base_url + "feed/account/" + account_uid + "/settled-transactions-between?" +
                                 "minTransactionTimestamp=" + "1000-01-01T00:00:00Z" +
