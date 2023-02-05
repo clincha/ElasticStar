@@ -53,7 +53,10 @@ def callback(request):
 
     if response.status_code == 200:
         starling = Starling(response.json()['access_token'])
-        main_account = starling.get_accounts()[0]['accountUid']
+        try:
+            main_account = starling.get_accounts()[0]['accountUid']
+        except ValueError as error:
+            return HttpResponseServerError(str(error))
         transactions = starling.get_transaction_feed(main_account)
         print("Success!")
 
