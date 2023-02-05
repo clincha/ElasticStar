@@ -1,4 +1,4 @@
-name: Populate Elastic Cloud
+name: Populate personal accounts
 
 on:
   workflow_dispatch:
@@ -23,9 +23,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run main script
+      - name: Run script
         env:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_CLOUD_ID }}
           ELASTIC_CLOUD_PASSWORD: ${{ secrets.ELASTIC_CLOUD_PASSWORD }}
-        run: python main.py
+        run: python personal_account.py
