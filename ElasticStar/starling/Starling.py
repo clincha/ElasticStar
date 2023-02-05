@@ -1,10 +1,16 @@
 from datetime import datetime
+
 import requests
 
-user_agent = 'elasticstar'
+user_agent = "ElasticStar"
+sandbox = True
+
 
 class Starling(object):
-    base_url = "https://api.starlingbank.com/api/v2/"
+    if sandbox:
+        base_url = "https://api-sandbox.starlingbank.com"
+    else:
+        base_url = "https://api.starlingbank.com"
     timestamp_format = "%Y-%m-%dT%H:%M:%SZ"
 
     def __init__(self, personal_access_token):
@@ -25,7 +31,7 @@ class Starling(object):
             'Authorization': "Bearer " + self.personal_access_token,
             'User-Agent': 'elasticstar'
         }
-        response = requests.get("https://api.starlingbank.com/api/v2/accounts", headers=headers)
+        response = requests.get(self.base_url + "accounts", headers=headers)
         response.raise_for_status()
         return response.json()['accounts']
 
@@ -38,9 +44,9 @@ class Starling(object):
             'Authorization': "Bearer " + self.personal_access_token,
             'User-Agent': 'elasticstar'
         }
-        response = requests.get(
-            "https://api.starlingbank.com/api/v2/account/" + account_uid + "/savings-goals",
-            headers=headers)
+        response = requests.get(self.base_url + "account/" +
+                                account_uid + "/savings-goals",
+                                headers=headers)
         response.raise_for_status()
         return response.json()
 
