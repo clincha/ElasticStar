@@ -1,6 +1,7 @@
 from datetime import datetime
 import requests
 
+user_agent = 'elasticstar'
 
 class Starling(object):
     base_url = "https://api.starlingbank.com/api/v2/"
@@ -21,12 +22,12 @@ class Starling(object):
             - name
         """
         headers = {
-            'Authorization': "Bearer " + self.personal_access_token
+            'Authorization': "Bearer " + self.personal_access_token,
+            'User-Agent': 'elasticstar'
         }
         response = requests.get("https://api.starlingbank.com/api/v2/accounts", headers=headers)
         response.raise_for_status()
         return response.json()['accounts']
-
 
     def get_saving_spaces(self, account_uid):
         """
@@ -34,7 +35,8 @@ class Starling(object):
         :return: A list of saving spaces which in turn are a list of strings
         """
         headers = {
-            'Authorization': "Bearer " + self.personal_access_token
+            'Authorization': "Bearer " + self.personal_access_token,
+            'User-Agent': 'elasticstar'
         }
         response = requests.get(
             "https://api.starlingbank.com/api/v2/account/" + account_uid + "/savings-goals",
@@ -44,7 +46,8 @@ class Starling(object):
 
     def get_transaction_feed(self, account_uid):
         headers = {
-            'Authorization': "Bearer " + self.personal_access_token
+            'Authorization': "Bearer " + self.personal_access_token,
+            'User-Agent': 'elasticstar'
         }
         response = requests.get(self.base_url + "feed/account/" + account_uid + "/settled-transactions-between?" +
                                 "minTransactionTimestamp=" + "1000-01-01T00:00:00Z" +
