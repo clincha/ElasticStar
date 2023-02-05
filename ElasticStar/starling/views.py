@@ -12,8 +12,7 @@ from .Starling import Starling
 
 client_id = 'BG887EBCs33ZRPzbkfLl'
 redirect_uri = 'https://elasticstar.clinch-home.com/starling/callback'
-
-elastic_index = 'elasticstar'
+base_index = 'elasticstar'
 
 
 def index(request):
@@ -29,8 +28,8 @@ def index(request):
 
 def callback(request):
     load_dotenv(find_dotenv())
-    client_secret = os.environ['STARLING_CLIENT_SECRET']
 
+    client_secret = os.environ['STARLING_CLIENT_SECRET']
     code = request.GET.get('code')
     state = request.GET.get('state')
 
@@ -49,30 +48,25 @@ def callback(request):
         url='https://api-sandbox.starlingbank.com/oauth/access-token',
         data=access_token_request_data
     )
+    response.raise_for_status()
 
-    if response.status_code == 200:
-        elastic = Elasticsearch(
-            cloud_id=os.getenv("ELASTIC_CLOUD_ID"),
-            basic_auth=("elastic", os.getenv("ELASTIC_CLOUD_PASSWORD"))
-        )
+    elastic = Elasticsearch(
+        cloud_id=os.getenv("ELASTIC_CLOUD_ID"),
+        basic_auth=("elastic", os.getenv("ELASTIC_CLOUD_PASSWORD"))
+    )
+    starling = Starling(response.json()['access_token'])
 
-        starling = Starling(response.json()['access_token'])
-        try:
-            for account in starling.get_accounts():
-                account_index = elastic_index + "_" + account['accountUid']
-                elastic.indices.create(index=account_index)
-                transactions = starling.get_transaction_feed(account['accountUid'])
+    for account in starling.get_accounts():
+        account_index = base_index + "_" + account['accountUid']
+        elastic.indices.create(index=account_index, ignore=400)  # ignore 400 (IndexAlreadyExistsException)
+        transactions = starling.get_transaction_feed(account['accountUid'])
 
-                progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
-                for ok, action in streaming_bulk(
-                        client=elastic,
-                        index=account_index,
-                        actions=starling.generate_elastic_bulk_actions(transactions)
-                ):
-                    progress.update(1)
-        except requests.exceptions.HTTPError as error:
-            return HttpResponseServerError(str(error))
+        progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
+        for ok, action in streaming_bulk(
+                client=elastic,
+                index=account_index,
+                actions=starling.generate_elastic_bulk_actions(transactions)
+        ):
+            progress.update(1)
 
-        return HttpResponse("Completed!")
-    else:
-        return HttpResponseServerError(str(response.status_code) + ' - ' + response.reason)
+    return HttpResponse("Completed!")

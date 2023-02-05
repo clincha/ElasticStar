@@ -13,22 +13,16 @@ class Starling(object):
         base_url = "https://api.starlingbank.com/api/v2/"
     timestamp_format = "%Y-%m-%dT%H:%M:%SZ"
 
-    def __init__(self, personal_access_token):
-        self.personal_access_token = personal_access_token
+    def __init__(self, access_token):
+        self.access_token = access_token
 
     def get_accounts(self):
         """
         Get an account holder's bank accounts
-        :return: An array containing all the users accounts. Account object keys:
-            - accountUid
-            - accountType
-            - defaultCategory
-            - currency
-            - createdAt
-            - name
+        :return: A list of the accounts that can be accessed using the access_token.
         """
         headers = {
-            'Authorization': "Bearer " + self.personal_access_token,
+            'Authorization': "Bearer " + self.access_token,
             'User-Agent': user_agent
         }
         response = requests.get(self.base_url + "accounts", headers=headers)
@@ -37,11 +31,12 @@ class Starling(object):
 
     def get_saving_spaces(self, account_uid):
         """
-        Gets all the saving spaces associated with the given personal access token
-        :return: A list of saving spaces which in turn are a list of strings
+        Get an account holder's saving spaces
+        :param account_uid The unique identifier for this account
+        :return: A list of the saving spaces that can be accessed using the access_token in the given account.
         """
         headers = {
-            'Authorization': "Bearer " + self.personal_access_token,
+            'Authorization': "Bearer " + self.access_token,
             'User-Agent': user_agent
         }
         response = requests.get(self.base_url + "account/" +
@@ -51,8 +46,13 @@ class Starling(object):
         return response.json()
 
     def get_transaction_feed(self, account_uid):
+        """
+        Gets all transactions generated from the given account
+        :param account_uid: The unique identifier for this account
+        :return: A list of the transactions that can be accessed using the access_token in the given account.
+        """
         headers = {
-            'Authorization': "Bearer " + self.personal_access_token,
+            'Authorization': "Bearer " + self.access_token,
             'User-Agent': user_agent
         }
         response = requests.get(self.base_url + "feed/account/" + account_uid + "/settled-transactions-between?" +
@@ -66,6 +66,11 @@ class Starling(object):
 
     @staticmethod
     def generate_elastic_bulk_actions(transaction_feed):
+        """
+        Converts the given transaction feed into a function that generates actions for interacting with the Elastic API
+        :param transaction_feed: A list of the transactions
+        :return: Actions for the Elastic API. To be used with the bulk helper function in the Elastic Python API
+        """
         for feedItem in transaction_feed['feedItems']:
             document = {
                 "_id": feedItem['feedItemUid']
