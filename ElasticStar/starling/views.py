@@ -2,8 +2,7 @@ import os
 
 import requests
 import tqdm
-from django.http import HttpResponseServerError
-from django.http import JsonResponse
+from django.http import HttpResponseServerError, HttpResponse
 from django.shortcuts import render
 from dotenv import load_dotenv, find_dotenv
 from elasticsearch import Elasticsearch
@@ -52,27 +51,26 @@ def callback(request):
     )
 
     if response.status_code == 200:
-        starling = Starling(response.json()['access_token'])
-        try:
-            main_account = starling.get_accounts()[0]['accountUid']
-        except requests.exceptions.HTTPError as error:
-            return HttpResponseServerError(str(error))
-        transactions = starling.get_transaction_feed(main_account)
-        print("Success!")
-
-        print("Adding transactions to Elastic...")
         elastic = Elasticsearch(
             cloud_id=os.getenv("ELASTIC_CLOUD_ID"),
             basic_auth=("elastic", os.getenv("ELASTIC_CLOUD_PASSWORD"))
         )
-        progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
-        for ok, action in streaming_bulk(
-                client=elastic,
-                index=elastic_index,
-                actions=starling.generate_elastic_bulk_actions(transactions)
-        ):
-            progress.update(1)
 
-        return JsonResponse(response.json())
+        starling = Starling(response.json()['access_token'])
+        try:
+            for account in starling.get_accounts():
+                transactions = starling.get_transaction_feed(account['accountUid'])
+
+                progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
+                for ok, action in streaming_bulk(
+                        client=elastic,
+                        index=elastic_index + ":" + account['accountUid'],
+                        actions=starling.generate_elastic_bulk_actions(transactions)
+                ):
+                    progress.update(1)
+        except requests.exceptions.HTTPError as error:
+            return HttpResponseServerError(str(error))
+
+        return HttpResponse("Completed!")
     else:
         return HttpResponseServerError(str(response.status_code) + ' - ' + response.reason)
