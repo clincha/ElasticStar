@@ -31,7 +31,7 @@ def callback(request):
     if state != 'ANGUS12345':
         return HttpResponseServerError('Incorrect state')
 
-    parameters = {
+    access_token_request_data = {
         'code': code,
         'client_id': client_id,
         'client_secret': client_secret,
@@ -41,7 +41,7 @@ def callback(request):
 
     response = requests.post(
         url='https://api-sandbox.starlingbank.com/oauth/access-token',
-        params=parameters
+        data=access_token_request_data
     )
 
     if response.status_code == 200:
