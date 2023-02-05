@@ -59,12 +59,14 @@ def callback(request):
         starling = Starling(response.json()['access_token'])
         try:
             for account in starling.get_accounts():
+                account_index = elastic_index + ":" + account['accountUid']
+                elastic.indices.create(index=account_index)
                 transactions = starling.get_transaction_feed(account['accountUid'])
 
                 progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
                 for ok, action in streaming_bulk(
                         client=elastic,
-                        index=elastic_index + ":" + account['accountUid'],
+                        index=account_index,
                         actions=starling.generate_elastic_bulk_actions(transactions)
                 ):
                     progress.update(1)
