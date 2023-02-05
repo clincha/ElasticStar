@@ -1,7 +1,7 @@
 import os
 
 import tqdm
-from starling import Starling
+from ElasticStar.starling import Starling
 from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import streaming_bulk
