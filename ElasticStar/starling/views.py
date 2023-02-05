@@ -59,7 +59,7 @@ def callback(request):
         starling = Starling(response.json()['access_token'])
         try:
             for account in starling.get_accounts():
-                account_index = elastic_index + ":" + account['accountUid']
+                account_index = elastic_index + "_" + account['accountUid']
                 elastic.indices.create(index=account_index)
                 transactions = starling.get_transaction_feed(account['accountUid'])
 
