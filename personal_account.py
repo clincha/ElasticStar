@@ -6,15 +6,13 @@ from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import streaming_bulk
 
-elastic_index = "starling"
+elastic_index = "clincha_starling_personal"
 
 if __name__ == '__main__':
-    print("Loading environment variables...")
     load_dotenv()
-    print("Success!")
 
     print("Getting transaction history...")
-    starling = Starling(os.getenv('PERSONAL_ACCESS_TOKEN'))
+    starling = Starling(os.getenv('PERSONAL_ACCESS_TOKEN'), sandbox=False)
     main_account = starling.get_accounts()[0]['accountUid']
     transactions = starling.get_transaction_feed(main_account)
     print("Success!")
@@ -24,6 +22,7 @@ if __name__ == '__main__':
         cloud_id=os.getenv("ELASTIC_CLOUD_ID"),
         basic_auth=("elastic", os.getenv("ELASTIC_CLOUD_PASSWORD"))
     )
+    elastic.indices.create(index=elastic_index, ignore=400)  # ignore 400 (IndexAlreadyExistsException)
     progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
     for ok, action in streaming_bulk(
             client=elastic,

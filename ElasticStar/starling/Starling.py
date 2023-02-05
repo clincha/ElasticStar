@@ -3,18 +3,16 @@ from datetime import datetime
 import requests
 
 user_agent = "ElasticStar"
-sandbox = True
 
 
 class Starling(object):
-    if sandbox:
-        base_url = "https://api-sandbox.starlingbank.com/api/v2/"
-    else:
-        base_url = "https://api.starlingbank.com/api/v2/"
-    timestamp_format = "%Y-%m-%dT%H:%M:%SZ"
-
-    def __init__(self, access_token):
+    def __init__(self, access_token, sandbox=True):
         self.access_token = access_token
+        if sandbox:
+            self.base_url = "https://api-sandbox.starlingbank.com/api/v2/"
+        else:
+            self.base_url = "https://api.starlingbank.com/api/v2/"
+        self.timestamp_format = "%Y-%m-%dT%H:%M:%SZ"
 
     def get_accounts(self):
         """
