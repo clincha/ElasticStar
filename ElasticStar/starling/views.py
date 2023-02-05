@@ -9,7 +9,7 @@ from dotenv import load_dotenv, find_dotenv
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import streaming_bulk
 
-from starling import Starling
+from ElasticStar.starling.Starling import Starling
 
 client_id = 'BG887EBCs33ZRPzbkfLl'
 redirect_uri = 'https://elasticstar.clinch-home.com/starling/callback'
