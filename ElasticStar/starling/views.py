@@ -55,7 +55,7 @@ def callback(request):
         starling = Starling(response.json()['access_token'])
         try:
             main_account = starling.get_accounts()[0]['accountUid']
-        except ValueError as error:
+        except requests.exceptions.HTTPError as error:
             return HttpResponseServerError(str(error))
         transactions = starling.get_transaction_feed(main_account)
         print("Success!")

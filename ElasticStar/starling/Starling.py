@@ -24,10 +24,9 @@ class Starling(object):
             'Authorization': "Bearer " + self.personal_access_token
         }
         response = requests.get("https://api.starlingbank.com/api/v2/accounts", headers=headers)
-        if response.status_code == 200:
-            return response.json()['accounts']
-        else:
-            raise ValueError('Personal access token is likely incorrect - ' + self.personal_access_token)
+        response.raise_for_status()
+        return response.json()['accounts']
+
 
     def get_saving_spaces(self, account_uid):
         """
