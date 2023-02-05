@@ -39,6 +39,7 @@ class Starling(object):
         response = requests.get(
             "https://api.starlingbank.com/api/v2/account/" + account_uid + "/savings-goals",
             headers=headers)
+        response.raise_for_status()
         return response.json()
 
     def get_transaction_feed(self, account_uid):
@@ -51,6 +52,7 @@ class Starling(object):
                                 "maxTransactionTimestamp=" + datetime.utcnow().strftime(self.timestamp_format),
                                 headers=headers
                                 )
+        response.raise_for_status()
         return response.json()
 
     @staticmethod

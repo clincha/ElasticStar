@@ -52,6 +52,9 @@ def callback(request):
     )
 
     if response.status_code == 200:
+
+        return JsonResponse(response.json())
+
         starling = Starling(response.json()['access_token'])
         try:
             main_account = starling.get_accounts()[0]['accountUid']
