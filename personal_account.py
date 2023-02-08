@@ -35,7 +35,7 @@ if __name__ == '__main__':
         progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
         for ok, action in streaming_bulk(
                 client=elastic,
-                index="CLINCHA_STARLING_{account_type}".format(account_type=account),
+                index="CLINCHA_STARLING_{account_type}".format(account_type=str(account).capitalize()),
                 actions=starling.generate_elastic_bulk_actions(transactions)
         ):
             progress.update(1)
