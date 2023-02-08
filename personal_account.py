@@ -7,16 +7,17 @@ from elasticsearch.helpers import streaming_bulk
 
 from ElasticStar.starling.Starling import Starling
 
-accounts = [
-    {"type": "personal"},
-    {"type": "business"}
-]
-
 if __name__ == '__main__':
     load_dotenv()
 
+    accounts = [
+        {"type": "personal"},
+        {"type": "business"}
+    ]
+
     for account in accounts:
         print("Getting transaction history...")
+        print('{account_type}_ACCESS_TOKEN'.format(account_type=account['type'].capitalize()))
         starling = Starling(os.getenv(
             '{account_type}_ACCESS_TOKEN'.format(account_type=account['type'].capitalize())),
             sandbox=False)
