@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import streaming_bulk
 
-from ElasticStar.starling.Starling import Starling
+from starling import Starling
 
 if __name__ == '__main__':
     load_dotenv()

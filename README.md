@@ -18,8 +18,6 @@ With the limitations of the first system clear, I created a set of user stories 
 
 ### User stories for improvement
 
-As a recruiter, I want to know what a candidate is capable of, so that I can recruit them into the correct role.
-
 As a Starling Bank account holder, I want to make custom visualizations for my bank account, so that I can quickly ascertain financial information that is relevant to me.
 
 As a Starling Bank account holder, I want to explore every piece of data that Starling has, so that I can build a holistic view of my opening.
@@ -27,6 +25,8 @@ As a Starling Bank account holder, I want to explore every piece of data that St
 As a Starling Bank account holder with multiple accounts, I want to be able to see the data from all the accounts, so that I can explore trends from each account and between the accounts.
 
 As a saver, I want to rapidly build and destroy visualizations, so that I can keep my view as relevant as possible.
+
+As a recruiter, I want to know what a candidate is capable of, so that I can recruit them into the correct role.
 
 ### Elastic Stack
 
