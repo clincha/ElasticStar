@@ -1,4 +1,4 @@
-[![Populate Elastic Cloud](https://github.com/clincha/StarSheet/actions/workflows/populate-personal-accounts.yml/badge.svg)](https://github.com/clincha/StarSheet/actions/workflows/populate-elastic-cloud.yml)
+[![Populate personal accounts](https://github.com/clincha/ElasticStar/actions/workflows/populate-personal-accounts.yml/badge.svg)](https://github.com/clincha/ElasticStar/actions/workflows/populate-personal-accounts.yml)
 
 # Project Report: Financial Data Management and Visualization
 
