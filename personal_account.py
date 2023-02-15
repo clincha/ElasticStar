@@ -1,32 +1,50 @@
+import json
 import os
 
+import elasticsearch
 import tqdm
-from ElasticStar.starling.Starling import Starling
 from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import streaming_bulk
 
-elastic_index = "clincha_starling_personal"
+from starling import Starling
 
 if __name__ == '__main__':
     load_dotenv()
+    accounts = ['PERSONAL', 'BUSINESS', 'JOINT']
 
-    print("Getting transaction history...")
-    starling = Starling(os.getenv('PERSONAL_ACCESS_TOKEN'), sandbox=False)
-    main_account = starling.get_accounts()[0]['accountUid']
-    transactions = starling.get_transaction_feed(main_account)
-    print("Success!")
+    for account in accounts:
+        access_token = '{account_type}_ACCESS_TOKEN'.format(account_type=account)
+        if access_token not in os.environ:
+            continue
 
-    print("Adding transactions to Elastic...")
-    elastic = Elasticsearch(
-        cloud_id=os.getenv("ELASTIC_CLOUD_ID"),
-        basic_auth=("elastic", os.getenv("ELASTIC_CLOUD_PASSWORD"))
-    )
-    elastic.indices.create(index=elastic_index, ignore=400)  # ignore 400 (IndexAlreadyExistsException)
-    progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
-    for ok, action in streaming_bulk(
-            client=elastic,
-            index=elastic_index,
-            actions=starling.generate_elastic_bulk_actions(transactions)
-    ):
-        progress.update(1)
+        print("Getting transaction history for account type: {account_type}".format(account_type=account))
+        starling = Starling(
+            os.getenv(access_token),
+            sandbox=False)
+        main_account = starling.get_accounts()[0]['accountUid']
+        transactions = starling.get_transaction_feed(main_account)
+
+        elastic = Elasticsearch(
+            cloud_id=os.getenv("ELASTIC_CLOUD_ID"),
+            basic_auth=("elastic", os.getenv("ELASTIC_CLOUD_PASSWORD"))
+        )
+
+        elastic_index = "CLINCHA_STARLING_{account_type}".format(account_type=account).lower()
+        try:
+            elastic.indices.create(index=elastic_index)
+            print("Creating index...")
+        except elasticsearch.BadRequestError as error:
+            if error.message == 'resource_already_exists_exception':
+                pass
+            else:
+                raise error
+
+        progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
+        print("Adding transactions to Elastic...")
+        for ok, action in streaming_bulk(
+                client=elastic,
+                index=elastic_index,
+                actions=starling.generate_elastic_bulk_actions(transactions)
+        ):
+            progress.update(1)
