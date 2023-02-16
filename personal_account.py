@@ -1,4 +1,3 @@
-import json
 import os
 
 import elasticsearch
@@ -27,9 +26,8 @@ if __name__ == '__main__':
 
         elastic = Elasticsearch(
             cloud_id=os.getenv("ELASTIC_CLOUD_ID"),
-            basic_auth=("elastic", os.getenv("ELASTIC_CLOUD_PASSWORD"))
+            basic_auth=(os.getenv("ELASTIC_USERNAME"), os.getenv("ELASTIC_PASSWORD"))
         )
-
         elastic_index = "CLINCHA_STARLING_{account_type}".format(account_type=account).lower()
         try:
             elastic.indices.create(index=elastic_index)

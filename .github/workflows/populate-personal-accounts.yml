@@ -28,5 +28,6 @@ jobs:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           BUSINESS_ACCESS_TOKEN: ${{ secrets.BUSINESS_ACCESS_TOKEN }}
           ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_CLOUD_ID }}
-          ELASTIC_CLOUD_PASSWORD: ${{ secrets.ELASTIC_CLOUD_PASSWORD }}
+          ELASTIC_USERNAME: ${{ secrets.ELASTIC_USERNAME }}
+          ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWORD }}
         run: python personal_account.py
