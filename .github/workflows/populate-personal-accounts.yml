@@ -6,11 +6,12 @@ on:
       - Provision Elastic Cloud deployment
     types:
       - completed
+  schedule:
+    - cron: "* * * * *"
 
 jobs:
   populate-data:
     runs-on: ubuntu-latest
-    needs: terraform
     steps:
       - uses: actions/checkout@v3
 
