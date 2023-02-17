@@ -24,8 +24,8 @@ jobs:
 
       - name: Plan
         working-directory: terraform
-        run: terraform plan
+        run: terraform plan -var="elastic_api_key=${{ secrets.ELASTIC_API_KEY }}" -var="github_api_key=${{ secrets.GITHUB_API_KEY }}"
 
       - name: Apply
         working-directory: terraform
-        run: terraform apply --auto-approve
+        run: terraform apply --auto-approve -var="elastic_api_key=${{ secrets.ELASTIC_API_KEY }}" -var="github_api_key=${{ secrets.GITHUB_API_KEY }}"
