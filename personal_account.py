@@ -33,9 +33,7 @@ if __name__ == '__main__':
             elastic.indices.create(index=elastic_index)
             print("Creating index...")
         except elasticsearch.BadRequestError as error:
-            if error.message == 'resource_already_exists_exception':
-                pass
-            else:
+            if error.message != 'resource_already_exists_exception':
                 raise error
 
         print("Adding transactions to Elastic...")

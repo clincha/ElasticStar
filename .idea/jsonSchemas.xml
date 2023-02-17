@@ -20,6 +20,9 @@
                   <Item>
                     <option name="path" value=".github/workflows/provision-elastic-instances.yml" />
                   </Item>
+                  <Item>
+                    <option name="path" value=".github/workflows/populate-personal-accounts.yml" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>
