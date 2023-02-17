@@ -1,6 +1,7 @@
 name: Terraform Cloud Workflow
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - "*"
