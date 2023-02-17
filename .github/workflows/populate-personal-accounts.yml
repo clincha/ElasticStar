@@ -1,6 +1,7 @@
 name: Populate personal accounts
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows:
       - Provision Elastic Cloud deployment
