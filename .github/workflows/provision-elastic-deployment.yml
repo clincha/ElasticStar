@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "*"
+      - master
   schedule:
-    - cron: "* * * * *"
+    - cron: "0 */4 * * *"
 
 jobs:
   terraform:
