@@ -46,3 +46,4 @@ if __name__ == '__main__':
                 actions=starling.generate_elastic_bulk_actions(transactions)
         ):
             progress.update(1)
+        progress.close()

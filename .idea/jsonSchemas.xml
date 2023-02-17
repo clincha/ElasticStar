@@ -17,6 +17,9 @@
                   <Item>
                     <option name="path" value=".github/workflows/push-elasticstar-image.yml" />
                   </Item>
+                  <Item>
+                    <option name="path" value=".github/workflows/provision-elastic-instances.yml" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>

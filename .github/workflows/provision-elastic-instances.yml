@@ -20,7 +20,9 @@ jobs:
         run: terraform init
 
       - name: Plan
+        working-directory: terraform
         run: terraform plan
 
       - name: Apply
+        working-directory: terraform
         run: terraform apply --auto-approve
