@@ -1,0 +1,27 @@
+name: Terraform Cloud Workflow
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          version: 0.12.24
+          backend: true
+      - name: Authenticate with Terraform Cloud
+        uses: hashicorp/terraform-login@v1
+        with:
+          atlas-token: ${{ secrets.ATLAS_TOKEN }}
+      - name: Run Terraform
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.24
+          tf_actions_subcommand: apply
+          tf_actions_working_dir: terraform
