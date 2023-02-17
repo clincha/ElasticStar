@@ -16,6 +16,9 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.ATLAS_TOKEN }}
 
+      - name: Initialise
+        run: terraform init
+
       - name: Plan
         run: terraform plan
 
