@@ -1,4 +1,11 @@
 terraform {
+  cloud {
+    organization = "clinch-home"
+
+    workspaces {
+      name = "elasticstar-elastic-cloud-deployment"
+    }
+  }
   required_providers {
     ec = {
       source  = "elastic/ec"
