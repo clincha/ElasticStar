@@ -1,10 +1,9 @@
 import os
-from time import sleep
 
 import elasticsearch
 import tqdm
 from dotenv import load_dotenv
-from elasticsearch import Elasticsearch, ApiError
+from elasticsearch import Elasticsearch
 from elasticsearch.helpers import streaming_bulk
 
 from starling import Starling
@@ -36,12 +35,6 @@ if __name__ == '__main__':
         except elasticsearch.BadRequestError as error:
             if error.message != 'resource_already_exists_exception':
                 raise error
-        except ApiError as error:
-            if error.message == 'Deleted resource.':
-                print("Elastic cloud not provisioned yet. Waiting 30 seconds...")
-                sleep(120)
-                print("Creating index...")
-                elastic.indices.create(index=elastic_index)
 
         print("Adding transactions to Elastic...")
         progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
