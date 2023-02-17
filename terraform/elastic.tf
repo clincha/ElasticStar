@@ -30,36 +30,5 @@ resource "ec_deployment" "development" {
         max_size_resource = "memory"
       }
     }
-
-    topology {
-      id            = "ml"
-      size          = "0"
-      size_resource = "memory"
-    }
-    topology {
-      id            = "master"
-      size          = "0"
-      size_resource = "memory"
-    }
-    topology {
-      id            = "frozen"
-      size          = "0"
-      size_resource = "memory"
-    }
-    topology {
-      id            = "cold"
-      size          = "0"
-      size_resource = "memory"
-    }
-    topology {
-      id            = "warm"
-      size          = "0"
-      size_resource = "memory"
-    }
-    topology {
-      id            = "coordinating"
-      size          = "0"
-      size_resource = "memory"
-    }
   }
 }
