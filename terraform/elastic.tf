@@ -3,8 +3,8 @@ data "ec_stack" "latest" {
   region        = "gcp-europe-west2"
 }
 
-resource "ec_deployment" "development" {
-  name = "clincha-development"
+resource "ec_deployment" "production" {
+  name = "clincha-production"
 
   region                 = data.ec_stack.latest.region
   version                = data.ec_stack.latest.version
