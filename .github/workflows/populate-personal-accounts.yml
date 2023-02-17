@@ -6,12 +6,6 @@ on:
       - Provision Elastic Cloud deployment
     types:
       - completed
-#  workflow_dispatch:
-#  push:
-#    branches:
-#      - "*"
-#  schedule:
-#    - cron: "* * * * *"
 
 jobs:
   populate-data:
