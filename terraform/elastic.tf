@@ -12,7 +12,7 @@ resource "ec_deployment" "production" {
 
   kibana {
     topology {
-      size          = "2g"
+      size          = "1g"
       size_resource = "memory"
       zone_count    = 1
     }
@@ -21,7 +21,7 @@ resource "ec_deployment" "production" {
   elasticsearch {
     topology {
       id            = "hot_content"
-      size          = "4g"
+      size          = "2g"
       size_resource = "memory"
       zone_count    = 1
 
