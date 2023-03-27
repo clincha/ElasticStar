@@ -21,7 +21,7 @@ resource "ec_deployment" "production" {
   elasticsearch {
     topology {
       id            = "hot_content"
-      size          = "2g"
+      size          = "1g"
       size_resource = "memory"
       zone_count    = 1
 
