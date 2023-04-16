@@ -30,7 +30,7 @@ if __name__ == '__main__':
             cloud_id=os.getenv("ELASTIC_CLOUD_ID"),
             basic_auth=(os.getenv("ELASTIC_USERNAME"), os.getenv("ELASTIC_PASSWORD"))
         )
-        elastic_index = variables.index_prepend + "{account_type}".format(account_type=account).lower()
+        elastic_index = (variables.index_prepend + "{account_type}").format(account_type=account).lower()
         try:
             print("Creating index...")
             elastic.indices.create(index=elastic_index)
