@@ -15,6 +15,7 @@ if __name__ == '__main__':
     for account in accounts:
         access_token = '{account_type}_ACCESS_TOKEN'.format(account_type=account)
         if access_token not in os.environ:
+            # Skip to the next account type
             continue
 
         print("Getting transaction history for account type: {account_type}".format(account_type=account))

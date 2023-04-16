@@ -33,4 +33,4 @@ jobs:
           ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_CLOUD_ID }}
           ELASTIC_USERNAME: ${{ secrets.ELASTIC_USERNAME }}
           ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWORD }}
-        run: python personal_account.py
+        run: python starling_to_elastic.py
