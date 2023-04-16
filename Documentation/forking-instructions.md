@@ -49,7 +49,21 @@ Now the Terraform Cloud API key is securely stored in GitHub Secrets and can be 
 
 ### Changing the Terraform variables
 
-Override the values in [terraform.tfvars](/terraform/terraform.tfvars) with the values you have in your Terraform account.
+Override the values in [terraform.tfvars](/terraform/terraform.tfvars) with the values you prefer.
+
+Due to a [limitation with the Terraform Cloud provider block](https://developer.hashicorp.com/terraform/cli/cloud/settings#the-cloud-block) you'll need to change the values in the [providers.tf](/terraform/providers.tf) Terraform file. Override the values with the vales you have in your Terraform account
+
+```hcl
+terraform {
+  cloud {
+    organization = "clinch-home" # <------- Change to your organisation name
+
+    workspaces {
+      name = "elasticstar-elastic-cloud-deployment" # <------- Change to your workspace name
+    }
+  }
+}
+```
 
 ## GitHub setup
 
