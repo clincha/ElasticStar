@@ -2,6 +2,8 @@
 
  This document provides an overview of the process to create a Elastic Cloud deployment with Elasticsearch and Kibana instances in the Google Cloud Platform (GCP), using Terraform. Additionally, we describe the `starling_to_elastic.py` script, which retrieves transaction data for different account types using the Starling API and indexes the transaction data into Elasticsearch.
 
+![ElasticStar.svg](/images/ElasticStar.svg)
+
 ## Terraform
 
 The Terraform code sets up an Elastic Cloud deployment with Elasticsearch and Kibana instances using a memory-optimized deployment template in the Google Cloud Platform (GCP) region `europe-west2`.
@@ -41,4 +43,4 @@ The [starling_to_elastic.py](/starling_to_elastic.py) is where the majority of t
 
 In summary, the script retrieves transaction data for various account types using the Starling API and indexes the transaction data into Elasticsearch.
 
-![ElasticStar.svg](/images/ElasticStar.svg)
+![script-output.png](/images/script-output.png)
