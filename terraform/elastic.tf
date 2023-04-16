@@ -1,10 +1,10 @@
 data "ec_stack" "latest" {
   version_regex = "latest"
-  region        = "gcp-europe-west2"
+  region        = var.gcp_reign
 }
 
 resource "ec_deployment" "production" {
-  name = "clincha-production"
+  name = var.deployment_name
 
   region                 = data.ec_stack.latest.region
   version                = data.ec_stack.latest.version
@@ -24,11 +24,6 @@ resource "ec_deployment" "production" {
       size          = "1g"
       size_resource = "memory"
       zone_count    = 1
-
-      autoscaling {
-        max_size          = "120g"
-        max_size_resource = "memory"
-      }
     }
   }
 }

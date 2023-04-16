@@ -1,9 +1,9 @@
 terraform {
   cloud {
-    organization = "clinch-home"
+    organization = var.terraform_organisation
 
     workspaces {
-      name = "elasticstar-elastic-cloud-deployment"
+      name = var.terraform_workspace
     }
   }
   required_providers {
