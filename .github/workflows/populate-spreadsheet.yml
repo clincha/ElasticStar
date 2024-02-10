@@ -6,7 +6,7 @@ on:
     branches:
       - '*'
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/15 * * * *"
 
 jobs:
   populate-data:
