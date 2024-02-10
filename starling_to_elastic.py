@@ -39,7 +39,7 @@ if __name__ == '__main__':
                 raise error
 
         print("Adding transactions to Elastic...")
-        progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions['feedItems']))
+        progress = tqdm.tqdm(unit="documents", total=sum(1 for _ in transactions))
         for ok, action in streaming_bulk(
                 client=elastic,
                 index=elastic_index,

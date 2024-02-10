@@ -1,0 +1,34 @@
+name: Populate spreadsheet
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '*'
+  schedule:
+    - cron: "*/15 * * * *"
+
+jobs:
+  populate-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: "Setup Google service account credentials"
+        run: echo "${{ secrets.GOOGLE_SHEETS_SERVICE_ACCOUNT }}" | base64 -d > service_account.json
+
+      - name: Run script
+        env:
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          BUSINESS_ACCESS_TOKEN: ${{ secrets.BUSINESS_ACCESS_TOKEN }}
+          JOINT_ACCESS_TOKEN: ${{ secrets.JOINT_ACCESS_TOKEN }}
+        run: python starling_to_sheets.py
