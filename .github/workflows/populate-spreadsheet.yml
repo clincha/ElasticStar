@@ -24,7 +24,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: "Setup Google service account credentials"
-        run: echo ${{ secrets.GOOGLE_SHEETS_SERVICE_ACCOUNT }} | base64 -d > service_account.json
+        run: echo "${{ secrets.GOOGLE_SHEETS_SERVICE_ACCOUNT }}" | base64 -d > service_account.json
 
       - name: Run script
         env:
