@@ -33,9 +33,9 @@ def update_transaction_sheet(account, transactions, workbook):
     for transaction in transactions:
         data.append([
             transaction.get('amount', "").get('currency', ""),
-            transaction.get('amount', "").get('minorUnits', ""),
+            transaction.get('amount', "").get('minorUnits', 0) / 100,
             transaction.get('sourceAmount', "").get('currency', ""),
-            transaction.get('sourceAmount', "").get('minorUnits', ""),
+            transaction.get('sourceAmount', "").get('minorUnits', 0) / 100,
             transaction.get('direction', ""),
             transaction.get('transactionTime', ""),
             transaction.get('source', ""),
@@ -78,14 +78,14 @@ def update_saving_spaces_sheet(account, spaces, workbook):
 
         if space.get('target'):
             space_data.append(space.get('target', "").get('currency', ""))
-            space_data.append(space.get('target', "").get('minorUnits', ""))
+            space_data.append(space.get('target', "").get('minorUnits', 0) / 100)
         else:
             space_data.append("")
             space_data.append("")
 
         data.append(space_data + [
             space.get('totalSaved', "").get('currency', ""),
-            space.get('totalSaved', "").get('minorUnits', ""),
+            space.get('totalSaved', "").get('minorUnits', 0) / 100,
             space.get('savedPercentage', ""),
             space.get('state', "")
         ])
