@@ -18,7 +18,7 @@ There's a detailed Project Report in the "Documentation" folder along with a wri
 
 This was useful for deciding to switch to a car club instead of owning a car. I've switched now, in a year's time I'll take a look at the data again. The spikes in the graph show insurance, services and repairs. Looking at this I expect the car club costs to be lower for the number of trips I make.
 
-![transport costs.png](/images/transport costs.png)
+![transport costs.png](/images/transport-costs.png)
 
 ## Spreadsheet output example
 
