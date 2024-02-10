@@ -114,7 +114,7 @@ if __name__ == '__main__':
         account_transactions = starling.get_transaction_feed(main_account)
         account_spaces = starling.get_saving_spaces(main_account)
 
-        # update_transaction_sheet(starling_account, account_transactions, finance_workbook)
+        update_transaction_sheet(starling_account, account_transactions, finance_workbook)
         update_saving_spaces_sheet(starling_account, account_spaces, finance_workbook)
 
         print(f"Successfully finished updating {starling_account.lower()} account!")
