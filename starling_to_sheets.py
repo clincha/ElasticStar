@@ -2,7 +2,6 @@ import os
 
 import gspread
 import variables
-from dotenv import load_dotenv
 from starling import Starling
 
 if __name__ == '__main__':
@@ -13,11 +12,11 @@ if __name__ == '__main__':
             continue
 
         print(f"Accessing sheet for {account.lower()} account...")
-        google_account = gspread.service_account(filename="service_account.json")
+        gc = gspread.service_account(filename="service_account.json")
         try:
-            worksheet = google_account.open("Finance").worksheet(f"starling-{account.lower()}")
+            worksheet = gc.open("Finance").worksheet(f"starling-{account.lower()}")
         except gspread.exceptions.WorksheetNotFound:
-            worksheet = google_account.create(f"starling-{account.lower()}")
+            worksheet = gc.open("Finance").add_worksheet(f"starling-{account.lower()}", 0, 0)
 
         print(f"Getting transaction history for {account.lower()} account...")
         starling = Starling(
