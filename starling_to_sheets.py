@@ -31,27 +31,23 @@ def update_transaction_sheet(account, transactions, workbook):
         "Has Receipt"
     ]]
     for transaction in transactions:
-        try:
-            data.append([
-                transaction.get('amount', "").get('currency', ""),
-                transaction.get('amount', "").get('minorUnits', ""),
-                transaction.get('sourceAmount', "").get('currency', ""),
-                transaction.get('sourceAmount', "").get('minorUnits', ""),
-                transaction.get('direction', ""),
-                transaction.get('transactionTime', ""),
-                transaction.get('source', ""),
-                transaction.get('status', ""),
-                transaction.get('counterPartyType', ""),
-                transaction.get('counterPartyName', ""),
-                transaction.get('reference', ""),
-                transaction.get('country', ""),
-                transaction.get('spendingCategory', ""),
-                transaction.get('hasAttachment', ""),
-                transaction.get('hasReceipt', ""),
-            ])
-        except KeyError as missing_key:
-            # Instead of failing here we can just set the values to "" if they don't have data in the API
-            print(f"Missing key for {missing_key}. Fatal transaction {transaction}")
+        data.append([
+            transaction.get('amount', "").get('currency', ""),
+            transaction.get('amount', "").get('minorUnits', ""),
+            transaction.get('sourceAmount', "").get('currency', ""),
+            transaction.get('sourceAmount', "").get('minorUnits', ""),
+            transaction.get('direction', ""),
+            transaction.get('transactionTime', ""),
+            transaction.get('source', ""),
+            transaction.get('status', ""),
+            transaction.get('counterPartyType', ""),
+            transaction.get('counterPartyName', ""),
+            transaction.get('reference', ""),
+            transaction.get('country', ""),
+            transaction.get('spendingCategory', ""),
+            transaction.get('hasAttachment', ""),
+            transaction.get('hasReceipt', ""),
+        ])
 
     print(f"Adding transactions to sheet...")
     worksheet.update(range_name='A1',
@@ -76,17 +72,21 @@ def update_saving_spaces_sheet(account, spaces, workbook):
         "State"
     ]]
     for space in spaces['savingsGoalList']:
-        data.append(
-            [
-                space.get('name', ""),
-                space.get('target', "").get('currency', ""),
-                space.get('target', "").get('minorUnits', ""),
-                space.get('totalSaved', "").get('currency', ""),
-                space.get('totalSaved', "").get('minorUnits', ""),
-                space.get('savedPercentage', ""),
-                space.get('state', "")
-            ]
-        )
+        space_data = [
+            space.get('name', "")
+        ]
+
+        if space.get('target'):
+            space_data.append(space.get('target', "").get('currency', ""))
+            space_data.append(space.get('target', "").get('minorUnits', ""))
+
+        data.append(space_data + [
+            space.get('totalSaved', "").get('currency', ""),
+            space.get('totalSaved', "").get('minorUnits', ""),
+            space.get('savedPercentage', ""),
+            space.get('state', "")
+        ])
+
     print(f"Adding saving space data to sheet...")
     worksheet.update(range_name='A1',
                      values=data)
