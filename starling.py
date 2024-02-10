@@ -60,7 +60,7 @@ class Starling(object):
                                 headers=headers
                                 )
         response.raise_for_status()
-        return response.json()
+        return response.json()['feedItems']
 
     @staticmethod
     def generate_elastic_bulk_actions(transaction_feed):
@@ -69,7 +69,7 @@ class Starling(object):
         :param transaction_feed: A list of the transactions
         :return: Actions for the Elastic API. To be used with the bulk helper function in the Elastic Python API
         """
-        for feedItem in transaction_feed['feedItems']:
+        for feedItem in transaction_feed:
             document = {
                 "_id": feedItem['feedItemUid']
             }
