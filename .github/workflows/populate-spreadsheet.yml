@@ -2,6 +2,9 @@ name: Populate spreadsheet
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - '*'
   schedule:
     - cron: "*/30 * * * *"
 
