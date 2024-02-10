@@ -14,7 +14,10 @@ if __name__ == '__main__':
 
         print(f"Accessing sheet for {account.lower()} account...")
         google_account = gspread.service_account(filename="service_account.json")
-        worksheet = google_account.open("Finance").worksheet(f"starling-{account.lower()}")
+        try:
+            worksheet = google_account.open("Finance").worksheet(f"starling-{account.lower()}")
+        except gspread.exceptions.WorksheetNotFound:
+            worksheet = google_account.create(f"starling-{account.lower()}")
 
         print(f"Getting transaction history for {account.lower()} account...")
         starling = Starling(
