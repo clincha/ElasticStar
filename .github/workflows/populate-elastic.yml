@@ -1,4 +1,4 @@
-name: Populate personal accounts
+name: Populate elastic
 
 on:
   workflow_dispatch:
