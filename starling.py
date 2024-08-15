@@ -43,10 +43,12 @@ class Starling(object):
         response.raise_for_status()
         return response.json()
 
-    def get_transaction_feed(self, account_uid):
+    def get_transaction_feed(self, account_uid, start_date=datetime(1000, 1, 1), end_date=datetime.utcnow()):
         """
         Gets all transactions generated from the given account
         :param account_uid: The unique identifier for this account
+        :param start_date: The earliest date to get transactions from (YYYY-MM-DDTHH:MM:SS:000Z)
+        :param end_date: The latest date to get transactions from (YYYY-MM-DDTHH:MM:SS:000Z)
         :return: A list of the transactions that can be accessed using the access_token in the given account.
         """
         headers = {
@@ -54,9 +56,9 @@ class Starling(object):
             'User-Agent': user_agent
         }
         response = requests.get(self.base_url + "feed/account/" + account_uid + "/settled-transactions-between?" +
-                                "minTransactionTimestamp=" + "1000-01-01T00:00:00Z" +
+                                "minTransactionTimestamp=" + start_date.strftime(self.timestamp_format) +
                                 "&"
-                                "maxTransactionTimestamp=" + datetime.utcnow().strftime(self.timestamp_format),
+                                "maxTransactionTimestamp=" + end_date.strftime(self.timestamp_format),
                                 headers=headers
                                 )
         response.raise_for_status()
@@ -76,3 +78,50 @@ class Starling(object):
             feedItem.pop('feedItemUid')
             document.update(feedItem)
             yield document
+
+    def get_transaction_attachments(self, account_uid, category_uid, transaction_uid):
+        """
+        Get the attachments for a specific transaction
+        :param account_uid: The unique identifier for this account
+        :param category_uid: The unique identifier for this category
+        :param transaction_uid: The unique identifier for this transaction
+        :return: A list of the attachments that can be accessed using the access_token in the given transaction.
+        """
+        headers = {
+            'Authorization': "Bearer " + self.access_token,
+            'User-Agent': user_agent
+        }
+        response = requests.get(self.base_url + "feed/account/" + account_uid + "/category/" + category_uid +
+                                "/" + transaction_uid + "/attachments",
+                                headers=headers
+                                )
+        response.raise_for_status()
+        return response.json()['feedItemAttachments']
+
+    def download_transaction_attachment(self, account_uid, category_uid, transaction_uid, attachment_uid,
+                                        attachment_type):
+        """
+        Download a specific attachment for a specific transaction
+        :param account_uid: The unique identifier for this account
+        :param category_uid: The unique identifier for this category
+        :param transaction_uid: The unique identifier for this transaction
+        :param attachment_uid: The unique identifier for this attachment
+        :param attachment_type: The type of the attachment
+        :return: The attachment that can be accessed using the access_token in the given transaction.
+        """
+        headers = {
+            'Authorization': "Bearer " + self.access_token,
+            'User-Agent': user_agent
+        }
+        response = requests.get(self.base_url + "feed/account/" + account_uid + "/category/" + category_uid +
+                                "/" + transaction_uid + "/attachments/" + attachment_uid,
+                                headers=headers
+                                )
+        response.raise_for_status()
+        Path("attachments").mkdir(parents=True, exist_ok=True)
+        if attachment_type == "image":
+            attachment_type = "png"
+        with open("attachments/" + transaction_uid + "." + attachment_type, "wb") as file:
+            file.write(response.content)
+
+        return response.content
