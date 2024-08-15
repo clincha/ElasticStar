@@ -29,7 +29,8 @@ def update_transaction_sheet(account, transactions, workbook):
         "Spending Category",
         "Has Attachment",
         "Has Receipt",
-        "Transaction UID"
+        "Transaction UID",
+        "Transaction Time"
     ]]
     for transaction in transactions:
         data.append([
@@ -48,7 +49,8 @@ def update_transaction_sheet(account, transactions, workbook):
             transaction.get('spendingCategory', ""),
             transaction.get('hasAttachment', ""),
             transaction.get('hasReceipt', ""),
-            transaction.get('feedItemUid', "")
+            transaction.get('feedItemUid', ""),
+            transaction.get('transactionTime', ""),
         ])
 
     print(f"Adding transactions to sheet...")
