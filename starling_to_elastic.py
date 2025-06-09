@@ -28,8 +28,8 @@ if __name__ == '__main__':
         transactions = starling.get_transaction_feed(main_account)
 
         elastic = Elasticsearch(
-            hosts=[os.getenv('ELASTICSEARCH_HOST')],
-            basic_auth=(os.getenv('ELASTICSEARCH_USERNAME'), os.getenv('ELASTICSEARCH_PASSWORD')),
+            hosts=[os.getenv('ELASTIC_HOST')],
+            basic_auth=(os.getenv('ELASTIC_USERNAME'), os.getenv('ELASTIC_PASSWORD')),
         )
 
         elastic_index = (variables.index_prepend + "{account_type}").format(account_type=account).lower()
