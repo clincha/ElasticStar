@@ -16,6 +16,7 @@ if __name__ == '__main__':
     for account in accounts:
         access_token = '{account_type}_ACCESS_TOKEN'.format(account_type=account)
         if access_token not in os.environ:
+            print(f"Access token for {account} not found in env, skipping...".format(account=account))
             # Skip to the next account type
             continue
 
@@ -27,9 +28,10 @@ if __name__ == '__main__':
         transactions = starling.get_transaction_feed(main_account)
 
         elastic = Elasticsearch(
-            cloud_id=os.getenv("ELASTIC_CLOUD_ID"),
-            basic_auth=(os.getenv("ELASTIC_USERNAME"), os.getenv("ELASTIC_PASSWORD"))
+            hosts=[os.getenv('ELASTICSEARCH_HOST')],
+            basic_auth=(os.getenv('ELASTICSEARCH_USERNAME'), os.getenv('ELASTICSEARCH_PASSWORD')),
         )
+
         elastic_index = (variables.index_prepend + "{account_type}").format(account_type=account).lower()
         try:
             print("Creating index...")
