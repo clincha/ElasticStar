@@ -1,5 +1,6 @@
 name: Populate spreadsheet
-
+permissions:
+  contents: read
 on:
   workflow_dispatch:
   push:
@@ -7,7 +8,6 @@ on:
       - '*'
   schedule:
     - cron: "*/15 * * * *"
-
 jobs:
   populate-data:
     runs-on: ubuntu-latest
