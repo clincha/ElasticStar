@@ -28,7 +28,7 @@ if __name__ == '__main__':
         transactions = starling.get_transaction_feed(main_account)
 
         elastic = Elasticsearch(
-            hosts=os.getenv('ELASTIC_HOST'),
+            hosts=[os.getenv('ELASTIC_HOST')],
             basic_auth=(os.getenv('ELASTIC_USERNAME'), os.getenv('ELASTIC_PASSWORD')),
         )
 

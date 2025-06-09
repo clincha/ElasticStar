@@ -27,7 +27,7 @@ jobs:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           BUSINESS_ACCESS_TOKEN: ${{ secrets.BUSINESS_ACCESS_TOKEN }}
           JOINT_ACCESS_TOKEN: ${{ secrets.JOINT_ACCESS_TOKEN }}
-          ELASTIC_HOST: ${{ secrets.HOST }}
+          ELASTIC_HOST: ${{ secrets.ELASTIC_HOST }}
           ELASTIC_USERNAME: ${{ secrets.ELASTIC_USERNAME }}
           ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWORD }}
         run: python starling_to_elastic.py
