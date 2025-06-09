@@ -1,26 +1,23 @@
 name: Populate elastic
 
 on:
+  push:
+    branches:
+      - "master"
   workflow_dispatch:
-  workflow_run:
-    workflows:
-      - Provision Elastic Cloud deployment
-    types:
-      - completed
   schedule:
     - cron: "*/15 * * * *"
 
 jobs:
   populate-data:
-    runs-on: ubuntu-latest
+    runs-on: github-runners-elasticstar
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
-          cache: pip
+          python-version: "3.13"
 
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -30,7 +27,7 @@ jobs:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           BUSINESS_ACCESS_TOKEN: ${{ secrets.BUSINESS_ACCESS_TOKEN }}
           JOINT_ACCESS_TOKEN: ${{ secrets.JOINT_ACCESS_TOKEN }}
-          ELASTIC_CLOUD_ID: ${{ secrets.ELASTIC_CLOUD_ID }}
+          ELASTIC_HOST: ${{ secrets.HOST }}
           ELASTIC_USERNAME: ${{ secrets.ELASTIC_USERNAME }}
           ELASTIC_PASSWORD: ${{ secrets.ELASTIC_PASSWORD }}
         run: python starling_to_elastic.py
