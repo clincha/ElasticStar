@@ -1,6 +1,8 @@
 name: Populate elastic
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}
 on:
   push:
     branches:
