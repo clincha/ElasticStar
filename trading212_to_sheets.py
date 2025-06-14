@@ -9,7 +9,7 @@ finance_workbook = gspread.service_account(filename="service_account.json").open
 
 for account in accounts:
     api_key = os.getenv(f"TRADING212_{account}_API_KEY")
-    t212 = client.Client(api_key, demo=True)
+    t212 = client.Client(api_key)
     response = t212.get_account_cash()
 
     try:
