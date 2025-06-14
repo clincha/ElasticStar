@@ -16,4 +16,8 @@ try:
 except gspread.exceptions.WorksheetNotFound:
     worksheet = finance_workbook.add_worksheet(f"trading212-{account.lower()}", 0, 0)
 
-worksheet.update(range_name="A1", values=response)
+data = []
+for key, value in response.items():
+    data.append([key, value])
+
+worksheet.update(range_name="A1", values=data)
