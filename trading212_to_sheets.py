@@ -32,8 +32,8 @@ for account in accounts:
     except gspread.exceptions.WorksheetNotFound:
         worksheet = finance_workbook.add_worksheet(f"trading212-{account.lower()}-positions", 0, 0)
 
-    data = [['ticker', 'quantity', 'currentPrice', 'ppl', 'fxPpl']]
+    data = [['Ticker', 'Quantity', 'Average Buy Price' 'Current Price', 'Predicted Profit/Loss', 'Foreign Exchange Predicted P/L']]
     for position in positions:
-        row = [position['ticker'], position['quantity'], position['currentPrice'], position['ppl'], position['fxPpl']]
+        row = [position['ticker'], position['quantity'], position['averagePrice'], position['currentPrice'], position['ppl'], position['fxPpl']]
         data.append(row)
     worksheet.update(range_name="A1", values=data)
