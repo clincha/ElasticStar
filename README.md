@@ -1,4 +1,3 @@
-[![Provision Elastic Cloud deployment](https://github.com/clincha/ElasticStar/actions/workflows/provision-elastic-deployment.yml/badge.svg?branch=master)](https://github.com/clincha/ElasticStar/actions/workflows/provision-elastic-deployment.yml)
 [![Populate elastic](https://github.com/clincha/ElasticStar/actions/workflows/populate-elastic.yml/badge.svg)](https://github.com/clincha/ElasticStar/actions/workflows/populate-elastic.yml)  
 
 [![Populate spreadsheet](https://github.com/clincha/ElasticStar/actions/workflows/populate-spreadsheet.yml/badge.svg)](https://github.com/clincha/ElasticStar/actions/workflows/populate-spreadsheet.yml)

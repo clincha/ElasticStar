@@ -22,7 +22,6 @@ for account in accounts:
         data.append([key, value])
     worksheet.update(range_name="A1", values=data)
 
-
 for account in accounts:
     api_key = os.getenv(f"TRADING212_{account}_API_KEY")
     t212 = client.Client(api_key)
@@ -33,9 +32,8 @@ for account in accounts:
     except gspread.exceptions.WorksheetNotFound:
         worksheet = finance_workbook.add_worksheet(f"trading212-{account.lower()}-positions", 0, 0)
 
-    print(positions)
-
     data = []
     for position in positions:
         row = [position['ticker'], position['quantity'], position['currentPrice'], position['ppl'], position['fxPpl']]
         data.append(row)
+    worksheet.update(range_name="A1", values=data)
