@@ -52,7 +52,7 @@ for account in accounts:
         row = [
             position['ticker'],
             position['quantity'],
-            instrument['currency'],
+            instrument['currencyCode'],
             position['averagePrice'],
             position['currentPrice'],
             position['ppl'],
