@@ -35,7 +35,7 @@ for account in accounts:
     # Set headings
     data = [[
         'Ticker',
-        'Quantity'
+        'Quantity',
         'Currency',
         'Average Buy Price',
         'Current Price',
