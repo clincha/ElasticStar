@@ -58,9 +58,16 @@ for account in accounts:
             position['ppl'],
             # Calculate the Total Predicted P/L
             f'='
-            f'SWITCH(C{row_index}, "GBP", 1, "GBX", 0.01, GOOGLEFINANCE(CONCATENATE("Currency:"&C{row_index}&"GBP")))'
-            f' * E{row_index}'
-            f' * D{row_index}'
+            f'('
+            f'  SWITCH('
+            f'          C{row_index},'
+            f'          "GBP", 1,'
+            f'          "GBX", 0.01,'
+            f'          GOOGLEFINANCE(CONCATENATE("Currency:"&C{row_index}&"GBP"))'
+            f'      ) ' # Get the conversion rate to GBP
+            f'  * E{row_index}' # Current Price in local currency
+            f')'
+            f' * B{row_index}' # Quantity
         ]
         data.append(row)
     worksheet.update(range_name="A1", values=data, raw=False)
