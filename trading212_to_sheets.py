@@ -60,7 +60,7 @@ for account in accounts:
             position['ppl'],
             position['fxPpl'],
             position['quantity'] * position['currentPrice'],  # Total Predicted P/L
-            f'=SWITCH(C{row_index},"GBP",1,GOOGLEFINANCE(CONCATENATE("Currency:"&C{row_index}&"GBP"))) * E{row_index}'
+            f'=SWITCH(C{row_index}, "GBP", 1, "GBX", 0.01, GOOGLEFINANCE(CONCATENATE("Currency:"&C{row_index}&"GBP"))) * E{row_index}'
         ]
         data.append(row)
     worksheet.update(range_name="A1", values=data, raw=False)
