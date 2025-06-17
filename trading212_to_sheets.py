@@ -77,3 +77,8 @@ for account in accounts:
         },
         "horizontalAlignment": "CENTER",
     })
+    worksheet.format(ranges="G:G", format={
+        "numberFormat": {
+            "type": "CURRENCY",
+        }
+    })
