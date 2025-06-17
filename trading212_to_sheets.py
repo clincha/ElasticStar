@@ -48,14 +48,14 @@ for account in accounts:
             f'='
             f'('
             f'  SWITCH('
-            f'          C{index},'
+            f'          C{index + 1},'
             f'          "GBP", 1,'
             f'          "GBX", 0.01,'
-            f'          GOOGLEFINANCE(CONCATENATE("Currency:"&C{index}&"GBP"))'
+            f'          GOOGLEFINANCE(CONCATENATE("Currency:"&C{index + 1}&"GBP"))'
             f'      ) '  # Get the conversion rate to GBP
-            f'  * E{index}'  # Current Price in local currency
+            f'  * E{index + 1}'  # Current Price in local currency
             f')'
-            f' * B{index}'  # Quantity
+            f' * B{index + 1}'  # Quantity
         ]
         data.append(row)
     worksheet.update(range_name="A1", values=data, raw=False)
