@@ -50,8 +50,16 @@ def update_transaction_sheet(account, transactions, workbook):
         ])
 
     print(f"Adding transactions to sheet...")
+    worksheet.clear()
+    worksheet.freeze(rows=1)
     worksheet.update(range_name='A1',
                      values=data)
+    worksheet.format(ranges="1:1", format={
+        "textFormat": {
+            "bold": True
+        },
+        "horizontalAlignment": "CENTER",
+    })
 
 
 def update_saving_spaces_sheet(account, spaces, workbook):
@@ -91,8 +99,16 @@ def update_saving_spaces_sheet(account, spaces, workbook):
         ])
 
     print(f"Adding saving space data to sheet...")
+    worksheet.clear()
+    worksheet.freeze(rows=1)
     worksheet.update(range_name='A1',
                      values=data)
+    worksheet.format(ranges="1:1", format={
+        "textFormat": {
+            "bold": True
+        },
+        "horizontalAlignment": "CENTER",
+    })
 
 
 if __name__ == '__main__':

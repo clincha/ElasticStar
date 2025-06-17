@@ -48,7 +48,7 @@ for account in accounts:
             f'='
             f'('
             f'  SWITCH('
-            f'          C{index + 2},' # We need to add 2 because the first row is the header and the index are 0-based
+            f'          C{index + 2},'  # We need to add 2 because the first row is the header and the index are 0-based
             f'          "GBP", 1,'
             f'          "GBX", 0.01,'
             f'          GOOGLEFINANCE(CONCATENATE("Currency:"&C{index + 2}&"GBP"))'
@@ -58,4 +58,13 @@ for account in accounts:
             f' * B{index + 2}'  # Quantity
         ]
         data.append(row)
+
+    worksheet.clear()
+    worksheet.freeze(rows=1)
     worksheet.update(range_name="A1", values=data, raw=False)
+    worksheet.format(ranges="1:1", format={
+        "textFormat": {
+            "bold": True
+        },
+        "horizontalAlignment": "CENTER",
+    })
