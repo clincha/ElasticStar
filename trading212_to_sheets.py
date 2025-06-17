@@ -53,4 +53,5 @@ for account in accounts:
             position['fxPpl'],
             position['quantity'] * position['currentPrice']  # Total Predicted P/L
         ]
+        data.append(row)
     worksheet.update(range_name="A1", values=data)
