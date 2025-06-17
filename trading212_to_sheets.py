@@ -35,7 +35,8 @@ for account in accounts:
     # Set headings
     data = [[
         'Ticker',
-        'Quantity',
+        'Quantity'
+        'Currency',
         'Average Buy Price',
         'Current Price',
         'Predicted Profit/Loss',
@@ -43,10 +44,15 @@ for account in accounts:
         'Total Predicted P/L'
     ]]
 
+    all_instruments = t212.get_instruments()
+
     for position in positions:
+        # Get the instrument details for the ticker
+        instrument = next((inst for inst in all_instruments if inst['ticker'] == position['ticker']), None)
         row = [
             position['ticker'],
             position['quantity'],
+            instrument['currency'],
             position['averagePrice'],
             position['currentPrice'],
             position['ppl'],
