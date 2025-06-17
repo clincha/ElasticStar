@@ -16,7 +16,16 @@ for account in accounts:
         worksheet = finance_workbook.worksheet(f"trading212-{account.lower()}")
     except gspread.exceptions.WorksheetNotFound:
         worksheet = finance_workbook.add_worksheet(f"trading212-{account.lower()}", 0, 0)
-    worksheet.update(range_name="A1", values=[[key, value] for key, value in t212.get_account_cash().items()])
+    worksheet.update(range_name="A1", values=[[key.title(), value] for key, value in t212.get_account_cash().items()])
+    worksheet.format("A:A", {
+        "textFormat": {
+            "bold": True
+        },
+        "horizontalAlignment": "CENTER",
+    })
+    worksheet.format("B:B", {
+        "numberFormat": {"type": "CURRENCY"}
+    })
 
     # Get account positions
     try:
@@ -48,7 +57,7 @@ for account in accounts:
             f'='
             f'('
             f'  SWITCH('
-            f'          C{index + 2},' # We need to add 2 because the first row is the header and the index are 0-based
+            f'          C{index + 2},'  # We need to add 2 because the first row is the header and the index are 0-based
             f'          "GBP", 1,'
             f'          "GBX", 0.01,'
             f'          GOOGLEFINANCE(CONCATENATE("Currency:"&C{index + 2}&"GBP"))'
@@ -58,4 +67,18 @@ for account in accounts:
             f' * B{index + 2}'  # Quantity
         ]
         data.append(row)
+
+    worksheet.clear()
+    worksheet.freeze(rows=1)
     worksheet.update(range_name="A1", values=data, raw=False)
+    worksheet.format(ranges="1:1", format={
+        "textFormat": {
+            "bold": True
+        },
+        "horizontalAlignment": "CENTER",
+    })
+    worksheet.format(ranges="G:G", format={
+        "numberFormat": {
+            "type": "CURRENCY",
+        }
+    })

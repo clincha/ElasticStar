@@ -50,8 +50,21 @@ def update_transaction_sheet(account, transactions, workbook):
         ])
 
     print(f"Adding transactions to sheet...")
+    worksheet.clear()
+    worksheet.freeze(rows=1)
     worksheet.update(range_name='A1',
                      values=data)
+    worksheet.format(ranges="1:1", format={
+        "textFormat": {
+            "bold": True
+        },
+        "horizontalAlignment": "CENTER",
+    })
+    worksheet.format(ranges="B:B", format={
+        "numberFormat": {
+            "type": "CURRENCY",
+        }
+    })
 
 
 def update_saving_spaces_sheet(account, spaces, workbook):
@@ -86,13 +99,31 @@ def update_saving_spaces_sheet(account, spaces, workbook):
         data.append(space_data + [
             space.get('totalSaved', "").get('currency', ""),
             space.get('totalSaved', "").get('minorUnits', 0) / 100,
-            space.get('savedPercentage', ""),
+            space.get('savedPercentage', 0) / 100,
             space.get('state', "")
         ])
 
     print(f"Adding saving space data to sheet...")
+    worksheet.clear()
+    worksheet.freeze(rows=1)
     worksheet.update(range_name='A1',
                      values=data)
+    worksheet.format(ranges="1:1", format={
+        "textFormat": {
+            "bold": True
+        },
+        "horizontalAlignment": "CENTER",
+    })
+    worksheet.format(ranges=["C:C", "E:E"], format={
+        "numberFormat": {
+            "type": "CURRENCY",
+        }
+    })
+    worksheet.format(ranges="F:F", format={
+        "numberFormat": {
+            "type": "PERCENT",
+        }
+    })
 
 
 if __name__ == '__main__':
