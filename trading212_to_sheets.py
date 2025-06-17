@@ -43,22 +43,14 @@ for account in accounts:
         'Total Predicted P/L'
     ]]
 
-    row_index = 1
     for position in positions:
-        row_index = row_index + 1
         row = [
             position['ticker'],
             position['quantity'],
             position['averagePrice'],
             position['currentPrice'],
             position['ppl'],
-            position['fxPpl']
+            position['fxPpl'],
+            position['quantity'] * position['currentPrice']  # Total Predicted P/L
         ]
-        # Total Predicted P/L = Quantity * Current Price
-        worksheet.update(
-            range_name=f"G{row_index}",
-            values=f"=B{row_index}*D{row_index}",
-            value_input_option=gspread.utils.ValueInputOption.user_entered,
-        )
-
     worksheet.update(range_name="A1", values=data)
