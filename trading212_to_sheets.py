@@ -46,10 +46,11 @@ for account in accounts:
     ]]
 
     all_instruments = t212.get_instruments()
-
+    row_index = 1
     for position in positions:
         # Get the instrument details for the ticker
         instrument = next((inst for inst in all_instruments if inst['ticker'] == position['ticker']), None)
+        row_index = row_index + 1
         row = [
             position['ticker'],
             position['quantity'],
@@ -59,7 +60,7 @@ for account in accounts:
             position['ppl'],
             position['fxPpl'],
             position['quantity'] * position['currentPrice'],  # Total Predicted P/L
-            '=SWITCH(C2,"GBP",1,GOOGLEFINANCE(CONCATENATE("Currency:"&C2&"GBP"))) * E2'
+            f'=SWITCH(C{row_index},"GBP",1,GOOGLEFINANCE(CONCATENATE("Currency:"&C{row_index}&"GBP"))) * E{row_index}'
         ]
         data.append(row)
     worksheet.update(range_name="A1", values=data, raw=False)
