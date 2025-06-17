@@ -41,7 +41,8 @@ for account in accounts:
         'Current Price',
         'Predicted Profit/Loss',
         'Foreign Exchange Predicted P/L',
-        'Total Predicted P/L'
+        'Total Predicted P/L',
+        'test_formula'
     ]]
 
     all_instruments = t212.get_instruments()
@@ -57,7 +58,8 @@ for account in accounts:
             position['currentPrice'],
             position['ppl'],
             position['fxPpl'],
-            position['quantity'] * position['currentPrice']  # Total Predicted P/L
+            position['quantity'] * position['currentPrice'],  # Total Predicted P/L
+            '=SWITCH(C2,"GBP",1,GOOGLEFINANCE(CONCATENATE("Currency:"&C2&"GBP"))) * E2'
         ]
         data.append(row)
-    worksheet.update(range_name="A1", values=data)
+    worksheet.update(range_name="A1", values=data, raw=False)
