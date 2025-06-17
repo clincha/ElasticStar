@@ -114,7 +114,7 @@ def update_saving_spaces_sheet(account, spaces, workbook):
         },
         "horizontalAlignment": "CENTER",
     })
-    worksheet.format(ranges="C:C, E:E", format={
+    worksheet.format(ranges=["C:C", "E:E"], format={
         "numberFormat": {
             "type": "CURRENCY",
         }
