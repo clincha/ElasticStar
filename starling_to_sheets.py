@@ -99,7 +99,7 @@ def update_saving_spaces_sheet(account, spaces, workbook):
         data.append(space_data + [
             space.get('totalSaved', "").get('currency', ""),
             space.get('totalSaved', "").get('minorUnits', 0) / 100,
-            space.get('savedPercentage', "") / 100,
+            space.get('savedPercentage', 0) / 100,
             space.get('state', "")
         ])
 
