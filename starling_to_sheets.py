@@ -60,6 +60,11 @@ def update_transaction_sheet(account, transactions, workbook):
         },
         "horizontalAlignment": "CENTER",
     })
+    worksheet.format(ranges="B:B", format={
+        "numberFormat": {
+            "type": "CURRENCY",
+        }
+    })
 
 
 def update_saving_spaces_sheet(account, spaces, workbook):
@@ -108,6 +113,16 @@ def update_saving_spaces_sheet(account, spaces, workbook):
             "bold": True
         },
         "horizontalAlignment": "CENTER",
+    })
+    worksheet.format(ranges="C:C, E:E", format={
+        "numberFormat": {
+            "type": "CURRENCY",
+        }
+    })
+    worksheet.format(ranges="F:F", format={
+        "numberFormat": {
+            "type": "PERCENT",
+        }
     })
 
 
