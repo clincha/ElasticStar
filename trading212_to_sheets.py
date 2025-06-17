@@ -40,7 +40,6 @@ for account in accounts:
         'Average Buy Price',
         'Current Price',
         'Predicted Profit/Loss',
-        'Foreign Exchange Predicted P/L',
         'Total Predicted P/L',
     ]]
 
@@ -57,7 +56,6 @@ for account in accounts:
             position['averagePrice'],
             position['currentPrice'],
             position['ppl'],
-            position['fxPpl'],
             # Calculate the Total Predicted P/L
             f'='
             f'SWITCH(C{row_index}, "GBP", 1, "GBX", 0.01, GOOGLEFINANCE(CONCATENATE("Currency:"&C{row_index}&"GBP")))'
