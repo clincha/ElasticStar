@@ -40,7 +40,7 @@ for account in accounts:
         row = [
             position['ticker'],
             position['quantity'],
-            (inst['currencyCode'] for inst in all_instruments if inst['ticker'] == position['ticker']),
+            next(inst['currencyCode'] for inst in all_instruments if inst['ticker'] == position['ticker']),
             position['averagePrice'],
             position['currentPrice'],
             position['ppl'],
