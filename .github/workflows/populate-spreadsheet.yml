@@ -1,6 +1,8 @@
 name: Populate spreadsheet
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}
 on:
   workflow_dispatch:
   push:
@@ -26,9 +28,15 @@ jobs:
       - name: "Setup Google service account credentials"
         run: echo "${{ secrets.GOOGLE_SHEETS_SERVICE_ACCOUNT }}" | base64 -d > service_account.json
 
-      - name: Run script
+      - name: Populate Starling data
         env:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           BUSINESS_ACCESS_TOKEN: ${{ secrets.BUSINESS_ACCESS_TOKEN }}
           JOINT_ACCESS_TOKEN: ${{ secrets.JOINT_ACCESS_TOKEN }}
         run: python starling_to_sheets.py
+
+      - name: Populate Trading212 data
+        env:
+          TRADING212_INVEST_API_KEY: ${{ secrets.TRADING212_INVEST_API_KEY }}
+          TRADING212_ISA_API_KEY: ${{ secrets.TRADING212_ISA_API_KEY }}
+        run: python trading212_to_sheets.py
