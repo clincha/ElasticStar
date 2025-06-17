@@ -16,7 +16,16 @@ for account in accounts:
         worksheet = finance_workbook.worksheet(f"trading212-{account.lower()}")
     except gspread.exceptions.WorksheetNotFound:
         worksheet = finance_workbook.add_worksheet(f"trading212-{account.lower()}", 0, 0)
-    worksheet.update(range_name="A1", values=[[key, value] for key, value in t212.get_account_cash().items()])
+    worksheet.update(range_name="A1", values=[[key.title(), value] for key, value in t212.get_account_cash().items()])
+    worksheet.format("A:A", {
+        "textFormat": {
+            "bold": True
+        },
+        "horizontalAlignment": "CENTER",
+    })
+    worksheet.format("B:B", {
+        "numberFormat": {"type": "CURRENCY"}
+    })
 
     # Get account positions
     try:
