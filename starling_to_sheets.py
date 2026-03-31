@@ -126,6 +126,27 @@ def update_saving_spaces_sheet(account, spaces, workbook):
     })
 
 
+def update_balance_cells(account, balance, workbook):
+    print(f"Writing balance data for {account.lower()} account...")
+    try:
+        worksheet = workbook.worksheet(f"starling-{account.lower()}")
+    except gspread.exceptions.WorksheetNotFound:
+        worksheet = workbook.add_worksheet(f"starling-{account.lower()}", 0, 0)
+
+    effective_balance = balance['effectiveBalance']['minorUnits'] / 100
+    total_effective_balance = balance['totalEffectiveBalance']['minorUnits'] / 100
+
+    worksheet.update(range_name='P1:Q2', values=[
+        ["Effective Balance", effective_balance],
+        ["Total Effective Balance", total_effective_balance],
+    ])
+    worksheet.format(ranges="Q1:Q2", format={
+        "numberFormat": {
+            "type": "CURRENCY",
+        }
+    })
+
+
 if __name__ == '__main__':
     print(f"Connecting to Google Sheets...")
     finance_workbook = gspread.service_account(filename="service_account.json").open("Finance")
@@ -143,11 +164,12 @@ if __name__ == '__main__':
             sandbox=False)
         account = starling.get_accounts()[0]
         main_account = account['accountUid']
-        default_category = account['defaultCategory']
-        account_transactions = starling.get_transaction_feed_with_pending(main_account, default_category)
+        account_transactions = starling.get_transaction_feed(main_account)
         account_spaces = starling.get_saving_spaces(main_account)
+        account_balance = starling.get_balance(main_account)
 
         update_transaction_sheet(starling_account, account_transactions, finance_workbook)
         update_saving_spaces_sheet(starling_account, account_spaces, finance_workbook)
+        update_balance_cells(starling_account, account_balance, finance_workbook)
 
         print(f"Successfully finished updating {starling_account.lower()} account!")
