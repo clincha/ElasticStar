@@ -1,6 +1,6 @@
-[![Populate elastic](https://github.com/clincha/ElasticStar/actions/workflows/populate-elastic.yml/badge.svg)](https://github.com/clincha/ElasticStar/actions/workflows/populate-elastic.yml)  
-
+[![Populate elastic](https://github.com/clincha/ElasticStar/actions/workflows/populate-elastic.yml/badge.svg)](https://github.com/clincha/ElasticStar/actions/workflows/populate-elastic.yml)
 [![Populate spreadsheet](https://github.com/clincha/ElasticStar/actions/workflows/populate-spreadsheet.yml/badge.svg)](https://github.com/clincha/ElasticStar/actions/workflows/populate-spreadsheet.yml)
+[![Run tests](https://github.com/clincha/ElasticStar/actions/workflows/test.yml/badge.svg)](https://github.com/clincha/ElasticStar/actions/workflows/test.yml)
 
 # ElasticStar
 
@@ -53,6 +53,28 @@ This was useful for deciding to switch to a car club instead of owning a car. I'
 | Pennies to Pounds | GBP             | 500    | GBP                  | 296.5       | 59               | ACTIVE |
 | Life              | GBP             | 5000   | GBP                  | 0           | 0                | ACTIVE |
 
+
+## How it works
+
+The Starling Bank API client (`starling.py`) fetches transaction feeds, savings goals, and account balances. Account balances come directly from the Starling `/accounts/{uid}/balance` endpoint rather than being derived from transaction sums, ensuring accuracy even with pending transactions.
+
+Data is pushed to:
+- **Elasticsearch** via `starling_to_elastic.py` for Kibana dashboards
+- **Google Sheets** via `starling_to_sheets.py` and `trading212_to_sheets.py` for budgeting
+
+Both pipelines run every 15 minutes via GitHub Actions.
+
+## Testing
+
+```bash
+pip install -r requirements.txt
+
+# Unit tests (mocked HTTP, no credentials needed)
+pytest tests/test_starling.py -v
+
+# Integration tests (requires PERSONAL_ACCESS_TOKEN, JOINT_ACCESS_TOKEN, etc.)
+pytest tests/test_balance_integration.py -v
+```
 
 ## Make your own
 
