@@ -141,8 +141,10 @@ if __name__ == '__main__':
         starling = Starling(
             os.getenv(access_token),
             sandbox=False)
-        main_account = starling.get_accounts()[0]['accountUid']
-        account_transactions = starling.get_transaction_feed(main_account)
+        account = starling.get_accounts()[0]
+        main_account = account['accountUid']
+        default_category = account['defaultCategory']
+        account_transactions = starling.get_transaction_feed_with_pending(main_account, default_category)
         account_spaces = starling.get_saving_spaces(main_account)
 
         update_transaction_sheet(starling_account, account_transactions, finance_workbook)

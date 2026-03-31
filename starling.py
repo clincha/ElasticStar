@@ -45,15 +45,36 @@ class Starling(object):
 
     def get_transaction_feed(self, account_uid):
         """
-        Gets all transactions generated from the given account
+        Gets all settled transactions generated from the given account
         :param account_uid: The unique identifier for this account
-        :return: A list of the transactions that can be accessed using the access_token in the given account.
+        :return: A list of the settled transactions that can be accessed using the access_token in the given account.
         """
         headers = {
             'Authorization': "Bearer " + self.access_token,
             'User-Agent': user_agent
         }
         response = requests.get(self.base_url + "feed/account/" + account_uid + "/settled-transactions-between?" +
+                                "minTransactionTimestamp=" + "1000-01-01T00:00:00Z" +
+                                "&"
+                                "maxTransactionTimestamp=" + datetime.utcnow().strftime(self.timestamp_format),
+                                headers=headers
+                                )
+        response.raise_for_status()
+        return response.json()['feedItems']
+
+    def get_transaction_feed_with_pending(self, account_uid, category_uid):
+        """
+        Gets all transactions (including pending) for the given account and category
+        :param account_uid: The unique identifier for this account
+        :param category_uid: The unique identifier for the category (use defaultCategory from get_accounts)
+        :return: A list of all transactions including pending ones.
+        """
+        headers = {
+            'Authorization': "Bearer " + self.access_token,
+            'User-Agent': user_agent
+        }
+        response = requests.get(self.base_url + "feed/account/" + account_uid +
+                                "/category/" + category_uid + "/transactions-between?" +
                                 "minTransactionTimestamp=" + "1000-01-01T00:00:00Z" +
                                 "&"
                                 "maxTransactionTimestamp=" + datetime.utcnow().strftime(self.timestamp_format),
