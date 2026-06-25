@@ -1,4 +1,5 @@
 from datetime import datetime
+from urllib.parse import urljoin
 
 import requests
 
@@ -9,9 +10,10 @@ class Starling(object):
     def __init__(self, access_token, sandbox=True):
         self.access_token = access_token
         if sandbox:
-            self.base_url = "https://api-sandbox.starlingbank.com/api/v2/"
+            self.host = "https://api-sandbox.starlingbank.com"
         else:
-            self.base_url = "https://api.starlingbank.com/api/v2/"
+            self.host = "https://api.starlingbank.com"
+        self.base_url = self.host + "/api/v2/"
         self.timestamp_format = "%Y-%m-%dT%H:%M:%SZ"
 
     def get_accounts(self):
@@ -57,24 +59,37 @@ class Starling(object):
         response.raise_for_status()
         return response.json()
 
-    def get_transaction_feed(self, account_uid):
+    def get_transaction_feed(self, account_uid, category_uid):
         """
-        Gets all settled transactions generated from the given account
+        Gets all transactions for the given account category.
+
+        The legacy settled-transactions-between endpoint rejects date ranges
+        over one year from 2026-08-04, so we walk the paginated feed instead,
+        following the links.next cursor until the feed is exhausted.
         :param account_uid: The unique identifier for this account
-        :return: A list of the settled transactions that can be accessed using the access_token in the given account.
+        :param category_uid: The category to read (use the account's defaultCategory)
+        :return: A list of the transactions in the given account category.
         """
         headers = {
             'Authorization': "Bearer " + self.access_token,
             'User-Agent': user_agent
         }
-        response = requests.get(self.base_url + "feed/account/" + account_uid + "/settled-transactions-between?" +
-                                "minTransactionTimestamp=" + "1000-01-01T00:00:00Z" +
-                                "&"
-                                "maxTransactionTimestamp=" + datetime.utcnow().strftime(self.timestamp_format),
-                                headers=headers
-                                )
-        response.raise_for_status()
-        return response.json()['feedItems']
+        url = (self.base_url + "feed/account/" + account_uid +
+               "/category/" + category_uid + "/paginated-transactions?" +
+               "minTransactionTimestamp=" + "1000-01-01T00:00:00Z" +
+               "&"
+               "maxTransactionTimestamp=" + datetime.utcnow().strftime(self.timestamp_format))
+
+        feed_items = []
+        seen_pages = set()
+        while url and url not in seen_pages:
+            seen_pages.add(url)
+            response = requests.get(urljoin(self.host, url), headers=headers)
+            response.raise_for_status()
+            page = response.json()
+            feed_items.extend(page.get('feedItems', []))
+            url = (page.get('links') or {}).get('next')
+        return feed_items
 
     @staticmethod
     def generate_elastic_bulk_actions(transaction_feed):

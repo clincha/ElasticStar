@@ -24,8 +24,8 @@ if __name__ == '__main__':
         starling = Starling(
             os.getenv(access_token),
             sandbox=False)
-        main_account = starling.get_accounts()[0]['accountUid']
-        transactions = starling.get_transaction_feed(main_account)
+        main_account = starling.get_accounts()[0]
+        transactions = starling.get_transaction_feed(main_account['accountUid'], main_account['defaultCategory'])
 
         elastic = Elasticsearch(
             hosts=[os.getenv('ELASTIC_HOST')],
