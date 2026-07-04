@@ -35,6 +35,21 @@ def test_get_accounts(client, sandbox_base):
     assert accounts[0]["defaultCategory"] == "cat-456"
 
 
+def test_get_accounts_returns_all_linked_accounts(client, sandbox_base):
+    accounts_response = {
+        "accounts": [
+            {"accountUid": "abc-123", "accountType": "PRIMARY", "name": "Personal"},
+            {"accountUid": "def-456", "accountType": "ADDITIONAL", "name": "Joint"},
+            {"accountUid": "ghi-789", "accountType": "ADDITIONAL", "name": "Business"},
+        ]
+    }
+    with requests_mock.Mocker() as m:
+        m.get(sandbox_base + "accounts", json=accounts_response)
+        accounts = client.get_accounts()
+
+    assert [a["accountUid"] for a in accounts] == ["abc-123", "def-456", "ghi-789"]
+
+
 def test_get_balance(client, sandbox_base):
     balance_response = {
         "effectiveBalance": {"currency": "GBP", "minorUnits": 13887},

@@ -2,29 +2,29 @@ import os
 
 import pytest
 
+import variables
 from starling import Starling
 
-ACCOUNTS = {
-    "PERSONAL": os.environ.get("PERSONAL_ACCESS_TOKEN"),
-    "BUSINESS": os.environ.get("BUSINESS_ACCESS_TOKEN"),
-    "JOINT": os.environ.get("JOINT_ACCESS_TOKEN"),
-}
+TOKEN_SOURCES = variables.token_sources(os.environ)
+
+
+def _account_params():
+    params = []
+    for source_key, token in TOKEN_SOURCES:
+        client = Starling(token, sandbox=False)
+        for label, account in variables.resolve_labels(client.get_accounts(), source_key):
+            params.append(pytest.param((label, client, account), id=label))
+    return params
 
 
 @pytest.mark.skipif(
-    not any(ACCOUNTS.values()),
+    not TOKEN_SOURCES,
     reason="No Starling access tokens available"
 )
 class TestBalanceIntegration:
-    @pytest.fixture(params=[
-        name for name, token in ACCOUNTS.items() if token
-    ])
+    @pytest.fixture(params=_account_params() if TOKEN_SOURCES else [])
     def starling_account(self, request):
-        name = request.param
-        token = ACCOUNTS[name]
-        client = Starling(token, sandbox=False)
-        account = client.get_accounts()[0]
-        return name, client, account
+        return request.param
 
     def test_balance_endpoint_returns_expected_fields(self, starling_account):
         name, client, account = starling_account
