@@ -150,6 +150,12 @@ This section will walk you through the process of creating a Starling developer 
      - Paste the corresponding personal access token into the "Value" field.
      - Click "Add secret" to save the token as a secret in your repository.
 
+   If you have linked several Starling accounts to a single Developer Portal
+   account, you can instead store one token in a secret named
+   `STARLING_ACCESS_TOKEN`. Every account that token can access is ingested,
+   with the index and sheet name derived from each account's name. The per-type
+   secrets above still work, so you can mix both approaches.
+
 Now you have a Starling developer account, personal access tokens for personal, joint, and business accounts, and these tokens securely stored in your GitHub repository secrets with the appropriate naming format. These secrets can be used in GitHub Actions workflows or other automated processes that require access to the Starling API for different account types.
 
 ## Final steps!

@@ -33,6 +33,7 @@ jobs:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           BUSINESS_ACCESS_TOKEN: ${{ secrets.BUSINESS_ACCESS_TOKEN }}
           JOINT_ACCESS_TOKEN: ${{ secrets.JOINT_ACCESS_TOKEN }}
+          STARLING_ACCESS_TOKEN: ${{ secrets.STARLING_ACCESS_TOKEN }}
         run: python starling_to_sheets.py
 
       - name: Populate Trading212 data
