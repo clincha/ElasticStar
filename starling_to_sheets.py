@@ -151,25 +151,18 @@ if __name__ == '__main__':
     print(f"Connecting to Google Sheets...")
     finance_workbook = gspread.service_account(filename="service_account.json").open("Finance")
 
-    for starling_account in variables.accounts:
-        print(f"Checking for {starling_account.lower()} access token...")
-        access_token = f'{starling_account}_ACCESS_TOKEN'
-        if access_token not in os.environ:
-            print("Not found, skipping...")
-            continue
+    for source_key, token in variables.token_sources(os.environ):
+        starling = Starling(token, sandbox=False)
 
-        print(f"Getting data from {starling_account.lower()} account...")
-        starling = Starling(
-            os.getenv(access_token),
-            sandbox=False)
-        account = starling.get_accounts()[0]
-        main_account = account['accountUid']
-        account_transactions = starling.get_transaction_feed(main_account)
-        account_spaces = starling.get_saving_spaces(main_account)
-        account_balance = starling.get_balance(main_account)
+        for label, account in variables.resolve_labels(starling.get_accounts(), source_key):
+            print(f"Getting data from {label} account...")
+            main_account = account['accountUid']
+            account_transactions = starling.get_transaction_feed(main_account)
+            account_spaces = starling.get_saving_spaces(main_account)
+            account_balance = starling.get_balance(main_account)
 
-        update_transaction_sheet(starling_account, account_transactions, finance_workbook)
-        update_saving_spaces_sheet(starling_account, account_spaces, finance_workbook)
-        update_balance_cells(starling_account, account_balance, finance_workbook)
+            update_transaction_sheet(label, account_transactions, finance_workbook)
+            update_saving_spaces_sheet(label, account_spaces, finance_workbook)
+            update_balance_cells(label, account_balance, finance_workbook)
 
-        print(f"Successfully finished updating {starling_account.lower()} account!")
+            print(f"Successfully finished updating {label} account!")
