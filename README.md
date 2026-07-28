@@ -1,12 +1,12 @@
-[![Populate elastic](https://github.com/clincha/ElasticStar/actions/workflows/populate-elastic.yml/badge.svg)](https://github.com/clincha/ElasticStar/actions/workflows/populate-elastic.yml)  
-
 [![Populate spreadsheet](https://github.com/clincha/ElasticStar/actions/workflows/populate-spreadsheet.yml/badge.svg)](https://github.com/clincha/ElasticStar/actions/workflows/populate-spreadsheet.yml)
 
 # ElasticStar
 
-This is a project I created to better visualise my bank transaction data. I'm using both the Elastic Stack and Google Sheets to accomplish this. Take a look at the "Documentation" folder for a deeper dive into the project or the "images" folder to see the results for yourself.
+This is a project I created to better visualise my bank transaction data. It populates a Google Sheet with my Starling and Trading212 data. Take a look at the "Documentation" folder for a deeper dive into the project or the "images" folder to see the results for yourself.
 
-The idea is to be able to interact with my bank transaction data in a way that is more meaningful to me. I want to be able to do that in a visual way and also be able to get exact figures when I need them. I've created a dashboard using Kibana and a Google Sheet to help me do that.
+The idea is to be able to interact with my bank transaction data in a way that is more meaningful to me. I want to be able to do that in a visual way and also be able to get exact figures when I need them.
+
+> The project originally fed an Elastic Stack alongside the spreadsheet, and the Kibana dashboards below are from that era. The Elastic side was retired in July 2026 — the spreadsheet turned out to be the more useful of the two. The dashboards and write-ups are kept here as a record.
 
 There's a detailed Project Report in the "Documentation" folder along with a writeup for my AirBnb transactions dashboard. The "Issues" tab has a list of tasks left for me to do before I can call this project a wrap. There are instructions for forking the project in the "Documentation" folder if you want to make your own version (see below).
 
