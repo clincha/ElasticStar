@@ -75,19 +75,31 @@ def test_get_balance_url(client, sandbox_base):
 
 
 def test_get_transaction_feed(client, sandbox_base):
-    feed_response = {
+    next_page = (sandbox_base + "feed/account/abc-123/category/cat-456/"
+                 "paginated-transactions?cursor=page-2")
+    page_one = {
         "feedItems": [
             {"feedItemUid": "tx-1", "amount": {"currency": "GBP", "minorUnits": 1000}},
+        ],
+        "links": {"next": next_page},
+    }
+    page_two = {
+        "feedItems": [
             {"feedItemUid": "tx-2", "amount": {"currency": "GBP", "minorUnits": 2000}},
-        ]
+        ],
+        "links": {"next": None},
     }
     with requests_mock.Mocker() as m:
-        m.get(requests_mock.ANY, json=feed_response)
-        items = client.get_transaction_feed("abc-123")
+        m.get(requests_mock.ANY, [{"json": page_one}, {"json": page_two}])
+        items = client.get_transaction_feed("abc-123", "cat-456")
 
     assert len(items) == 2
     assert items[0]["feedItemUid"] == "tx-1"
-    assert "settled-transactions-between" in m.last_request.url
+    assert items[1]["feedItemUid"] == "tx-2"
+    assert len(m.request_history) == 2
+    assert "paginated-transactions" in m.request_history[0].url
+    assert "category/cat-456" in m.request_history[0].url
+    assert "cursor=page-2" in m.request_history[1].url
 
 
 def test_get_saving_spaces(client, sandbox_base):

@@ -44,7 +44,7 @@ class TestBalanceIntegration:
         effective = balance["effectiveBalance"]["minorUnits"]
         pending = balance["pendingTransactions"]["minorUnits"]
 
-        transactions = client.get_transaction_feed(account_uid)
+        transactions = client.get_transaction_feed(account_uid, account["defaultCategory"])
         tx_sum = 0
         for tx in transactions:
             minor = tx["amount"]["minorUnits"]

@@ -157,7 +157,7 @@ if __name__ == '__main__':
         for label, account in variables.resolve_labels(starling.get_accounts(), source_key):
             print(f"Getting data from {label} account...")
             main_account = account['accountUid']
-            account_transactions = starling.get_transaction_feed(main_account)
+            account_transactions = starling.get_transaction_feed(main_account, account['defaultCategory'])
             account_spaces = starling.get_saving_spaces(main_account)
             account_balance = starling.get_balance(main_account)
 
