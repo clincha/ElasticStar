@@ -1,6 +1,5 @@
 import re
 
-index_prepend = "CLINCHA_STARLING_"
 accounts = ['PERSONAL', 'BUSINESS', 'JOINT']
 single_token_key = 'STARLING_ACCESS_TOKEN'
 

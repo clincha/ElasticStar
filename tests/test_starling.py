@@ -102,17 +102,3 @@ def test_get_saving_spaces(client, sandbox_base):
 
     assert len(spaces["savingsGoalList"]) == 1
     assert spaces["savingsGoalList"][0]["name"] == "Holiday"
-
-
-def test_generate_elastic_bulk_actions():
-    feed = [
-        {"feedItemUid": "uid-1", "amount": {"currency": "GBP", "minorUnits": 100}, "direction": "OUT"},
-        {"feedItemUid": "uid-2", "amount": {"currency": "GBP", "minorUnits": 200}, "direction": "IN"},
-    ]
-    actions = list(Starling.generate_elastic_bulk_actions(feed))
-
-    assert len(actions) == 2
-    assert actions[0]["_id"] == "uid-1"
-    assert actions[1]["_id"] == "uid-2"
-    assert "feedItemUid" not in actions[0]
-    assert actions[0]["direction"] == "OUT"

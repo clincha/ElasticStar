@@ -75,18 +75,3 @@ class Starling(object):
                                 )
         response.raise_for_status()
         return response.json()['feedItems']
-
-    @staticmethod
-    def generate_elastic_bulk_actions(transaction_feed):
-        """
-        Converts the given transaction feed into a function that generates actions for interacting with the Elastic API
-        :param transaction_feed: A list of the transactions
-        :return: Actions for the Elastic API. To be used with the bulk helper function in the Elastic Python API
-        """
-        for feedItem in transaction_feed:
-            document = {
-                "_id": feedItem['feedItemUid']
-            }
-            feedItem.pop('feedItemUid')
-            document.update(feedItem)
-            yield document
