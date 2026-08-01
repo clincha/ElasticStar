@@ -164,7 +164,7 @@ if __name__ == '__main__':
             sandbox=False)
         account = starling.get_accounts()[0]
         main_account = account['accountUid']
-        account_transactions = starling.get_transaction_feed(main_account)
+        account_transactions = starling.get_transaction_feed(main_account, account['defaultCategory'])
         account_spaces = starling.get_saving_spaces(main_account)
         account_balance = starling.get_balance(main_account)
 
