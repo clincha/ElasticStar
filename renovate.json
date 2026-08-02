@@ -10,6 +10,11 @@
       "description": "Test-only deps carry no runtime risk and the test job gates them",
       "matchPackageNames": ["pytest", "requests-mock"],
       "groupName": "test dependencies"
+    },
+    {
+      "description": "setup-python's python-version is a deliberate interpreter pin, not a dependency",
+      "matchDepNames": ["python"],
+      "enabled": false
     }
   ]
 }
