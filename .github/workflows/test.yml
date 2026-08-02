@@ -18,7 +18,7 @@ jobs:
           enable-cache: true
 
       - name: Install dependencies
-        run: uv sync --locked --all-groups
+        run: uv sync --locked
 
       - name: Run unit tests
-        run: uv run pytest tests/ -v
+        run: uv run --no-sync pytest tests/ -v
