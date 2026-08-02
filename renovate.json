@@ -17,7 +17,7 @@
   "packageRules": [
     {
       "description": "Test-only deps carry no runtime risk and the test job gates them",
-      "matchDepTypes": ["dev"],
+      "matchDepTypes": ["dependency-groups"],
       "groupName": "test dependencies"
     },
     {
@@ -27,8 +27,8 @@
       "automerge": false
     },
     {
-      "description": "The interpreter moves on its own schedule and CI is the only thing exercising it",
-      "matchManagers": ["pyenv"],
+      "description": "Matched by name because the interpreter surfaces twice, as requires-python and as .python-version. CI is the only thing exercising it.",
+      "matchDepNames": ["python"],
       "matchUpdateTypes": ["major", "minor"],
       "automerge": false
     }
