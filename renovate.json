@@ -1,0 +1,15 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "enabledManagers": ["pip_requirements", "github-actions"],
+  "dependencyDashboard": false,
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 2,
+  "packageRules": [
+    {
+      "description": "Test-only deps carry no runtime risk and the test job gates them",
+      "matchPackageNames": ["pytest", "requests-mock"],
+      "groupName": "test dependencies"
+    }
+  ]
+}
