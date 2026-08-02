@@ -6,7 +6,7 @@ requires-python = ">=3.14"
 dependencies = [
     "gspread==6.2.1",
     "python-dotenv==1.2.2",
-    "requests==2.32.4",
+    "requests==2.33.0",
     "tqdm==4.67.1",
     "trading212-api-py==0.1.9",
 ]
