@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 from urllib.parse import urljoin
 
 import requests
@@ -78,7 +78,7 @@ class Starling(object):
                "/category/" + category_uid + "/paginated-transactions?" +
                "minTransactionTimestamp=" + "1000-01-01T00:00:00Z" +
                "&"
-               "maxTransactionTimestamp=" + datetime.utcnow().strftime(self.timestamp_format))
+               "maxTransactionTimestamp=" + datetime.now(UTC).strftime(self.timestamp_format))
 
         feed_items = []
         seen_pages = set()

@@ -1,20 +1,36 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
-  "enabledManagers": ["pip_requirements", "github-actions"],
+  "enabledManagers": ["pep621", "pyenv", "github-actions"],
   "dependencyDashboard": false,
   "prConcurrentLimit": 3,
   "prHourlyLimit": 2,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "automerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "platformAutomerge": false,
+  "minimumReleaseAge": "3 days",
   "packageRules": [
     {
       "description": "Test-only deps carry no runtime risk and the test job gates them",
-      "matchPackageNames": ["pytest", "requests-mock"],
+      "matchDepTypes": ["dev"],
       "groupName": "test dependencies"
     },
     {
-      "description": "setup-python's python-version is a deliberate interpreter pin, not a dependency",
-      "matchDepNames": ["python"],
-      "enabled": false
+      "description": "A major runtime bump can change behaviour the test suite does not cover, so it stops for a human",
+      "matchUpdateTypes": ["major"],
+      "matchDepTypes": ["project.dependencies"],
+      "automerge": false
+    },
+    {
+      "description": "The interpreter moves on its own schedule and CI is the only thing exercising it",
+      "matchManagers": ["pyenv"],
+      "matchUpdateTypes": ["major", "minor"],
+      "automerge": false
     }
   ]
 }

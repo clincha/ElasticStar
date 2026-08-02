@@ -1,7 +1,0 @@
-requests==2.32.4
-tqdm==4.67.1
-python-dotenv==1.1.0
-gspread==6.2.1
-trading212-api-py==0.1.9
-pytest==8.3.5
-requests-mock==1.12.1
