@@ -1,0 +1,36 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "enabledManagers": ["pep621", "pyenv", "github-actions"],
+  "dependencyDashboard": false,
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 2,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
+  "automerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "platformAutomerge": false,
+  "minimumReleaseAge": "3 days",
+  "packageRules": [
+    {
+      "description": "Test-only deps carry no runtime risk and the test job gates them",
+      "matchDepTypes": ["dependency-groups"],
+      "groupName": "test dependencies"
+    },
+    {
+      "description": "A major runtime bump can change behaviour the test suite does not cover, so it stops for a human",
+      "matchUpdateTypes": ["major"],
+      "matchDepTypes": ["project.dependencies"],
+      "automerge": false
+    },
+    {
+      "description": "Matched by name because the interpreter surfaces twice, as requires-python and as .python-version. CI is the only thing exercising it.",
+      "matchDepNames": ["python"],
+      "matchUpdateTypes": ["major", "minor"],
+      "automerge": false
+    }
+  ]
+}
