@@ -8,7 +8,7 @@ dependencies = [
     "python-dotenv==1.2.2",
     "requests==2.34.2",
     "tqdm==4.70.0",
-    "trading212-api-py==0.1.9",
+    "trading212-api-py==1.0.0",
 ]
 
 [dependency-groups]
