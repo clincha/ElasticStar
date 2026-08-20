@@ -5,7 +5,7 @@ description = "Pulls Starling and Trading212 data into the finance spreadsheet"
 requires-python = ">=3.14"
 dependencies = [
     "gspread==6.2.1",
-    "python-dotenv==1.2.2",
+    "python-dotenv==1.2.3",
     "requests==2.34.2",
     "tqdm==4.70.0",
     "trading212-api-py==0.1.9",
