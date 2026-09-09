@@ -188,7 +188,7 @@ requires-dist = [
     { name = "python-dotenv", specifier = "==1.2.3" },
     { name = "requests", specifier = "==2.34.2" },
     { name = "tqdm", specifier = "==4.70.0" },
-    { name = "trading212-api-py", specifier = "==0.1.9" },
+    { name = "trading212-api-py", specifier = "==1.0.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -399,11 +399,14 @@ wheels = [
 
 [[package]]
 name = "trading212-api-py"
-version = "0.1.9"
+version = "1.0.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a4/77/113f9fcf6ddc80ddbe6dfd7e5ecfea51cb41230030bc11dc9516fb457706/trading212_api_py-0.1.9.tar.gz", hash = "sha256:901ceebc6004cb8ae3e7e585aa2e8f106372527815e1defd47738dce2bf55228", size = 17809, upload-time = "2025-06-16T06:56:58.647Z" }
+dependencies = [
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/cd/b0/e61ed71d824545ce2fe358c2d7103b13d3f5f0c799ecd889897a8bd50be4/trading212_api_py-1.0.0.tar.gz", hash = "sha256:92fdf2bd5caee3d06716a871086e54be73600471b3cf77274a7679bf0029f646", size = 20663, upload-time = "2026-08-09T06:39:29.511Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/06/8a/5b20924aad3bba4c40b0be34d75d6f68a951a0c179ae37f5562afe8bd1b4/trading212_api_py-0.1.9-py3-none-any.whl", hash = "sha256:f163d11e0491c34f211bfa53068435dd7afbc08e2bea070dc80fa58326a00a0c", size = 15926, upload-time = "2025-06-16T06:56:57.599Z" },
+    { url = "https://files.pythonhosted.org/packages/83/b7/50e5faf7fd7eb2b6fe71f48d8e695c85cb9ee0fb6c7a8ae9180b255c9f78/trading212_api_py-1.0.0-py3-none-any.whl", hash = "sha256:283036f757e6cc9f4ada476985eddf1d5058a4706fcb509e412d84a2baf08c83", size = 17143, upload-time = "2026-08-09T06:39:28.309Z" },
 ]
 
 [[package]]
